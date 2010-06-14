@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.02';
+  $Net::Riak::VERSION = '0.03';
 }
 
 # ABSTRACT: Interface to Riak
@@ -16,7 +16,7 @@ has client => (
     is       => 'rw',
     isa      => 'Net::Riak::Client',
     required => 1,
-    handles  => [qw/request useragent/]
+    handles  => [qw/request useragent is_alive/]
 );
 
 sub BUILDARGS {
@@ -32,13 +32,6 @@ sub bucket {
     $bucket;
 }
 
-sub is_alive {
-    my $self     = shift;
-    my $request  = $self->request('GET', ['ping']);
-    my $response = $self->useragent->request($request);
-    $response->is_success ? return 1 : return 0;
-}
-
 1;
 
 
@@ -51,7 +44,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 

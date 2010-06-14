@@ -1,6 +1,6 @@
 package Net::Riak::Client;
 BEGIN {
-  $Net::Riak::Client::VERSION = '0.02';
+  $Net::Riak::Client::VERSION = '0.03';
 }
 
 use Moose;
@@ -23,17 +23,7 @@ has mapred_prefix => (
     isa     => 'Str',
     default => 'mapred'
 );
-has r => (
-    is      => 'rw',
-    isa     => 'Int',
-    default => 2
-);
-has w => (
-    is      => 'rw',
-    isa     => 'Int',
-    default => 2
-);
-has dw => (
+has [qw/r w dw/] => (
     is      => 'rw',
     isa     => 'Int',
     default => 2
@@ -48,6 +38,13 @@ sub _build_client_id {
     "perl_net_riak" . encode_base64(int(rand(10737411824)), '');
 }
 
+sub is_alive {
+    my $self     = shift;
+    my $request  = $self->request('GET', ['ping']);
+    my $response = $self->useragent->request($request);
+    $response->is_success ? return 1 : return 0;
+}
+
 1;
 
 __END__
@@ -59,7 +56,7 @@ Net::Riak::Client
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 AUTHOR
 

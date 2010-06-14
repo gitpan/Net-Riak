@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.02';
+  $Net::Riak::Object::VERSION = '0.03';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -11,53 +11,18 @@ use Moose;
 use Scalar::Util;
 use Net::Riak::Link;
 
-has key => (
-    is       => 'rw',
-    isa      => 'Str',
-    required => 1
-);
-has client => (
-    is       => 'rw',
-    isa      => 'Net::Riak::Client',
-    required => 1
-);
-has bucket => (
-    is       => 'rw',
-    isa      => 'Net::Riak::Bucket',
-    required => 1
-);
-has data => (
-    is      => 'rw',
-    isa     => 'Any',
-    clearer => '_clear_data'
-);
-has r => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->r }
-);
-has w => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->w }
-);
-has dw => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->dw }
-);
-has content_type => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => 'application/json'
-);
-has status => (
-    is  => 'rw',
-    isa => 'Int'
-);
+with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
+with 'Net::Riak::Role::Base' => {classes =>
+      [{name => 'bucket', required => 1}, {name => 'client', required => 1}]};
+
+has key => (is => 'rw', isa => 'Str', required => 1);
+has status       => (is => 'rw', isa => 'Int');
+has exists       => (is => 'rw', isa => 'Bool', default => 0,);
+has data         => (is => 'rw', isa => 'Any', clearer => '_clear_data');
+has vclock       => (is => 'rw', isa => 'Str', predicate => 'has_vclock',);
+has content_type => (is => 'rw', isa => 'Str', default => 'application/json');
+has _headers     => (is => 'rw', isa => 'HTTP::Response',);
+has _jsonize     => (is => 'rw', isa => 'Bool', lazy => 1, default => 1,);
 has links => (
     traits     => ['Array'],
     is         => 'rw',
@@ -68,18 +33,9 @@ has links => (
     handles    => {
         count_links => 'elements',
         append_link => 'push',
+        has_links   => 'count',
     },
     clearer => '_clear_links',
-);
-has exists => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
-);
-has vclock => (
-    is        => 'rw',
-    isa       => 'Str',
-    predicate => 'has_vclock',
 );
 has siblings => (
     traits     => ['Array'],
@@ -97,16 +53,6 @@ has siblings => (
         has_no_siblings => 'is_empty',
     },
     clearer => '_clear_links',
-);
-has _headers => (
-    is  => 'rw',
-    isa => 'HTTP::Response',
-);
-has _jsonize => (
-    is      => 'rw',
-    isa     => 'Bool',
-    lazy    => 1,
-    default => 1,
 );
 
 sub store {
@@ -128,7 +74,7 @@ sub store {
         $request->header('X-Riack-Vclock' => $self->vclock);
     }
 
-    if ($self->count_links > 0) {
+    if ($self->has_links) {
         $request->header('link' => $self->_links_to_header);
     }
 
@@ -145,13 +91,8 @@ sub store {
 }
 
 sub _links_to_header {
-    my $self        = shift;
-    my $header_link = '';
-    foreach my $l ($self->links) {
-        $header_link .= ', ' if ($header_link ne '');
-        $header_link .= $l->to_link_header($self->client);
-    }
-    $header_link;
+    my $self = shift;
+    join(', ', map { $_->to_link_header($self->client) } $self->links);
 }
 
 sub load {
@@ -356,7 +297,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 

@@ -14,8 +14,10 @@ lib/Net/Riak/LinkPhase.pm
 lib/Net/Riak/MapReduce.pm
 lib/Net/Riak/MapReducePhase.pm
 lib/Net/Riak/Object.pm
+lib/Net/Riak/Role/Base.pm
 lib/Net/Riak/Role/MapReduce.pm
 lib/Net/Riak/Role/REST.pm
+lib/Net/Riak/Role/Replica.pm
 lib/Net/Riak/Role/UserAgent.pm
 t/01_basic.t
 t/02_client.t

@@ -1,22 +1,15 @@
 package Net::Riak::Link;
 BEGIN {
-  $Net::Riak::Link::VERSION = '0.02';
+  $Net::Riak::Link::VERSION = '0.03';
 }
 
 # ABSTRACT: the riaklink object represents a link from one Riak object to another
 
 use Moose;
 
-has client => (
-    is       => 'ro',
-    isa      => 'Net::Riak::Client',
-    required => 0,
-);
-has bucket => (
-    is       => 'ro',
-    isa      => 'Net::Riak::Bucket',
-    required => 1,
-);
+with 'Net::Riak::Role::Base' => {classes =>
+      [{name => 'client', required => 0}, {name => 'bucket', required => 1},]};
+
 has key => (
     is      => 'rw',
     isa     => 'Str',
@@ -56,7 +49,7 @@ Net::Riak::Link - the riaklink object represents a link from one Riak object to 
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 AUTHOR
 

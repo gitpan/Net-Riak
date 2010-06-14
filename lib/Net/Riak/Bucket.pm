@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.02';
+  $Net::Riak::Bucket::VERSION = '0.03';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
@@ -9,38 +9,19 @@ use JSON;
 use Moose;
 use Net::Riak::Object;
 
+with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
+with 'Net::Riak::Role::Base' =>
+  {classes => [{name => 'client', required => 1}]};
+
 has name => (
     is       => 'ro',
     isa      => 'Str',
-    required => 1
-);
-has client => (
-    is       => 'ro',
-    isa      => 'Net::Riak::Client',
     required => 1
 );
 has content_type => (
     is      => 'rw',
     isa     => 'Str',
     default => 'application/json'
-);
-has r => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->r }
-);
-has w => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->w }
-);
-has dw => (
-    is      => 'rw',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { (shift)->client->dw }
 );
 
 sub n_val {
@@ -146,7 +127,7 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 

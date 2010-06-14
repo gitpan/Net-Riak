@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST;
 BEGIN {
-  $Net::Riak::Role::REST::VERSION = '0.02';
+  $Net::Riak::Role::REST::VERSION = '0.03';
 }
 
 # ABSTRACT: role for REST operations
@@ -40,7 +40,7 @@ Net::Riak::Role::REST - role for REST operations
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 AUTHOR
 

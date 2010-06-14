@@ -31,10 +31,11 @@ my %WriteMakefileArgs = (
     'MIME::Base64' => '0',
     'Moose' => '0',
     'Moose::Role' => '0',
+    'MooseX::Role::Parameterized' => '0',
     'Scalar::Util' => '0',
     'URI' => '0'
   },
-  'VERSION' => '0.02',
+  'VERSION' => '0.03',
   'test' => {
     'TESTS' => 't/*.t'
   }
