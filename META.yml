@@ -3,6 +3,7 @@ abstract: 'Interface to Riak'
 author:
   - 'franck cuny <franck@lumberjaph.net>'
 build_requires:
+  HTTP::Response: 0
   Test::More: 0
   YAML::Syck: 0
 configure_requires:
@@ -24,7 +25,7 @@ requires:
   Moose::Role: 0
   Scalar::Util: 0
   URI: 0
-version: 0.01
+version: 0.02
 x_Dist_Zilla:
   plugins:
     -

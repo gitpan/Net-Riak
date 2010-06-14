@@ -12,6 +12,7 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'Interface to Riak',
   'AUTHOR' => 'franck cuny <franck@lumberjaph.net>',
   'BUILD_REQUIRES' => {
+    'HTTP::Response' => '0',
     'Test::More' => '0',
     'YAML::Syck' => '0'
   },
@@ -33,7 +34,7 @@ my %WriteMakefileArgs = (
     'Scalar::Util' => '0',
     'URI' => '0'
   },
-  'VERSION' => '0.01',
+  'VERSION' => '0.02',
   'test' => {
     'TESTS' => 't/*.t'
   }
