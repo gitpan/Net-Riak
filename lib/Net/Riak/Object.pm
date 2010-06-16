@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.03';
+  $Net::Riak::Object::VERSION = '0.04';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -297,7 +297,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 

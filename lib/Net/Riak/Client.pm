@@ -1,18 +1,17 @@
 package Net::Riak::Client;
 BEGIN {
-  $Net::Riak::Client::VERSION = '0.03';
+  $Net::Riak::Client::VERSION = '0.04';
 }
 
 use Moose;
 use MIME::Base64;
 
-with qw/Net::Riak::Role::REST Net::Riak::Role::UserAgent/;
+with qw/
+  Net::Riak::Role::REST
+  Net::Riak::Role::UserAgent
+  Net::Riak::Role::Hosts
+  /;
 
-has host => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => 'http://127.0.0.1:8098'
-);
 has prefix => (
     is      => 'rw',
     isa     => 'Str',
@@ -56,7 +55,7 @@ Net::Riak::Client
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

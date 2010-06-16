@@ -6,6 +6,9 @@ META.yml
 Makefile.PL
 README
 dist.ini
+eg/mapred_01.pl
+eg/mapred_02.pl
+eg/mapred_03.pl
 lib/Net/Riak.pm
 lib/Net/Riak/Bucket.pm
 lib/Net/Riak/Client.pm
@@ -15,6 +18,7 @@ lib/Net/Riak/MapReduce.pm
 lib/Net/Riak/MapReducePhase.pm
 lib/Net/Riak/Object.pm
 lib/Net/Riak/Role/Base.pm
+lib/Net/Riak/Role/Hosts.pm
 lib/Net/Riak/Role/MapReduce.pm
 lib/Net/Riak/Role/REST.pm
 lib/Net/Riak/Role/Replica.pm
@@ -24,6 +28,8 @@ t/02_client.t
 t/03_object.t
 t/04_bucket.t
 t/05_links.t
+t/06_host.t
+t/07_properties.t
 t/release-eol.t
 t/release-no-tabs.t
 t/release-pod-coverage.t

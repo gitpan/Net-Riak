@@ -1,12 +1,13 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.03';
+  $Net::Riak::Bucket::VERSION = '0.04';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
 
 use JSON;
 use Moose;
+use Carp;
 use Net::Riak::Object;
 
 with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
@@ -36,13 +37,20 @@ sub n_val {
 
 sub allow_multiples {
     my $self = shift;
-    # XXX use JSON::false / true ?
+
     if (my $val = shift) {
-        $self->set_property('allow_mult', $val);
+        my $bool = ($val == 1 ? JSON::true : JSON::false);
+        $self->set_property('allow_mult', $bool);
     }
     else {
         return $self->get_property('allow_mult');
     }
+}
+
+sub get_keys {
+    my $self = shift;
+    my $properties = $self->get_properties({keys => 'true', props => 'false'});
+    return $properties->{keys};
 }
 
 sub get {
@@ -63,15 +71,16 @@ sub set_property {
 }
 
 sub get_property {
-    my ($self, $key) = @_;
-    my $props = $self->get_properties;
-    return $props->{$key};
+    my ($self, $key, $params) = @_;
+    my $props = $self->get_properties($params);
+    return $props->{props}->{$key};
 }
 
 sub get_properties {
-    my $self = shift;
+    my ($self, $params) = @_;
 
-    my $params = {props => 'True', keys => 'False'};
+    $params->{props} = 'true'  unless exists $params->{props};
+    $params->{keys}  = 'false' unless exists $params->{keys};
 
     my $request =
       $self->client->request('GET', [$self->client->prefix, $self->name],
@@ -82,7 +91,6 @@ sub get_properties {
     my $props = {};
     if ($response->is_success) {
         $props = JSON::decode_json($response->content);
-        $props = $props->{props};
     }
     return $props;
 }
@@ -95,12 +103,8 @@ sub set_properties {
     $request->content(JSON::encode_json({props => $props}));
     my $response = $self->client->useragent->request($request);
 
-    if (!$response->is_success) {
-        # XXX
-    }
-
-    if ($response->code != 204) {
-        # XXX
+    if (!$response->is_success || $response->code != 204) {
+        croak "Error setting bucket properties.";
     }
 }
 
@@ -127,7 +131,7 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -195,9 +199,15 @@ Get/set the N-value for this bucket, which is the number of replicas that will b
 
 =head2 allow_multiples
 
-    my $allow_mul = $bucket->allow_multiples;
+    $bucket->allow_multiples(1|0);
 
 If set to True, then writes with conflicting data will be stored and returned to the client. This situation can be detected by calling has_siblings() and get_siblings(). This should only be used if you know what you are doing.
+
+=head2 get_keys
+
+    my $keys = $bucket->get_keys;
+
+Return the list of keys for a bucket
 
 =head2 set_property
 
@@ -209,7 +219,7 @@ Set a bucket property. This should only be used if you know what you are doing.
 
     my $prop = $bucket->get_property('n_val');
 
-Retrieve a bucket property
+Retrieve a bucket property.
 
 =head2 set_properties
 
@@ -217,7 +227,9 @@ Set multiple bucket properties in one call. This should only be used if you know
 
 =head2 get_properties
 
-Retrieve an associative array of all bucket properties.
+Retrieve an associative array of all bucket properties. By default, 'props' is set to true and 'keys' to false. You can change this default:
+
+    my $properties = $bucket->get_properties({keys=>'true'});
 
 =head1 AUTHOR
 

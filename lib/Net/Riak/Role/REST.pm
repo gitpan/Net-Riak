@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST;
 BEGIN {
-  $Net::Riak::Role::REST::VERSION = '0.03';
+  $Net::Riak::Role::REST::VERSION = '0.04';
 }
 
 # ABSTRACT: role for REST operations
@@ -17,7 +17,7 @@ sub _build_path {
 sub _build_uri {
     my ($self, $path, $params) = @_;
 
-    my $uri = URI->new($self->host);
+    my $uri = URI->new($self->get_host);
     $uri->path($self->_build_path($path));
     $uri->query_form(%$params);
     $uri;
@@ -40,7 +40,7 @@ Net::Riak::Role::REST - role for REST operations
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 
