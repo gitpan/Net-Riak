@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.04
+    version 0.05
 
 SYNOPSIS
         my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');

@@ -27,7 +27,7 @@ requires:
   MooseX::Role::Parameterized: 0
   Scalar::Util: 0
   URI: 0
-version: 0.04
+version: 0.05
 x_Dist_Zilla:
   plugins:
     -
