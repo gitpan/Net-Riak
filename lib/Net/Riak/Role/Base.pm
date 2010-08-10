@@ -1,6 +1,6 @@
 package Net::Riak::Role::Base;
 BEGIN {
-  $Net::Riak::Role::Base::VERSION = '0.06';
+  $Net::Riak::Role::Base::VERSION = '0.07';
 }
 
 use MooseX::Role::Parameterized;
@@ -39,7 +39,7 @@ Net::Riak::Role::Base
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 AUTHOR
 

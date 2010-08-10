@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 BEGIN {
-  $Net::Riak::MapReduce::VERSION = '0.06';
+  $Net::Riak::MapReduce::VERSION = '0.07';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -194,7 +194,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 SYNOPSIS
 
