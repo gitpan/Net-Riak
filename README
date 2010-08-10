@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.05
+    version 0.06
 
 SYNOPSIS
         my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
@@ -90,7 +90,7 @@ METHODS
     Start assembling a Map/Reduce operation
 
 AUTHOR
-      franck cuny <franck@lumberjaph.net>
+    franck cuny <franck@lumberjaph.net>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2010 by linkfluence.

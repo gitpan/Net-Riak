@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.05';
+  $Net::Riak::VERSION = '0.06';
 }
 
 # ABSTRACT: Interface to Riak
@@ -44,7 +44,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -159,7 +159,7 @@ Start assembling a Map/Reduce operation
 
 =head1 AUTHOR
 
-  franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 

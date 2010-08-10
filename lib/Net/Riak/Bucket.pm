@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.05';
+  $Net::Riak::Bucket::VERSION = '0.06';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
@@ -131,7 +131,7 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -233,7 +233,7 @@ Retrieve an associative array of all bucket properties. By default, 'props' is s
 
 =head1 AUTHOR
 
-  franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 

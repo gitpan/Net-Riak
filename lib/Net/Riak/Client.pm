@@ -1,6 +1,6 @@
 package Net::Riak::Client;
 BEGIN {
-  $Net::Riak::Client::VERSION = '0.05';
+  $Net::Riak::Client::VERSION = '0.06';
 }
 
 use Moose;
@@ -55,11 +55,11 @@ Net::Riak::Client
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 
-  franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 

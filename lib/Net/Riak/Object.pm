@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.05';
+  $Net::Riak::Object::VERSION = '0.06';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -192,7 +192,7 @@ sub _populate_links {
                 key => $key,
                 tag => $tag
             );
-            $self->add_link($link);
+            $self->add_link($l);
         }
     }
 }
@@ -298,7 +298,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -476,7 +476,7 @@ Start assembling a Map/Reduce operation
 
 =head1 AUTHOR
 
-  franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
