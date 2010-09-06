@@ -1,6 +1,6 @@
 package Net::Riak::Role::Replica;
 BEGIN {
-  $Net::Riak::Role::Replica::VERSION = '0.07';
+  $Net::Riak::Role::Replica::VERSION = '0.08';
 }
 
 use MooseX::Role::Parameterized;
@@ -36,7 +36,7 @@ Net::Riak::Role::Replica
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.07';
+  $Net::Riak::Bucket::VERSION = '0.08';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
@@ -88,11 +88,11 @@ sub get_properties {
 
     my $response = $self->client->useragent->request($request);
 
-    my $props = {};
-    if ($response->is_success) {
-        $props = JSON::decode_json($response->content);
+    if (!$response->is_success) {
+        die "Error getting bucket properties: " . $response->status_line . "\n";
     }
-    return $props;
+
+    return JSON::decode_json($response->content);
 }
 
 sub set_properties {
@@ -103,18 +103,19 @@ sub set_properties {
     $request->content(JSON::encode_json({props => $props}));
     my $response = $self->client->useragent->request($request);
 
-    if (!$response->is_success || $response->code != 204) {
-        croak "Error setting bucket properties.";
+    if (!$response->is_success) {
+        die "Error setting bucket properties: " . $response->status_line . "\n";
     }
 }
 
 sub new_object {
-    my ($self, $key, $data) = @_;
+    my ($self, $key, $data, @args) = @_;
     my $object = Net::Riak::Object->new(
         key    => $key,
         data   => $data,
         bucket => $self,
         client => $self->client,
+        @args,
     );
     $object;
 }
@@ -131,7 +132,7 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 SYNOPSIS
 
@@ -181,15 +182,15 @@ DW value setting for this client (default 2)
 
 =head2 new_object
 
-    my $obj = $bucket->new_object($key, $data);
+    my $obj = $bucket->new_object($key, $data, @args);
 
-Create a new L<Net::Riak::Object> object that will be stored as JSON.
+Create a new L<Net::Riak::Object> object. Additional Object constructor arguments can be passed after $data. If $data is a reference and no explicit Object content_type is given in @args, the data will be serialised and stored as JSON.
 
 =head2 get
 
     my $obj = $bucket->get($key, [$r]);
 
-Retrieve a JSON-encoded object from Riak
+Retrieve an object from Riak.
 
 =head2 n_val
 
@@ -207,7 +208,7 @@ If set to True, then writes with conflicting data will be stored and returned to
 
     my $keys = $bucket->get_keys;
 
-Return the list of keys for a bucket
+Return an arrayref of the list of keys for a bucket.
 
 =head2 set_property
 

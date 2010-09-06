@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.07';
+  $Net::Riak::Object::VERSION = '0.08';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -78,7 +78,7 @@ sub store {
         $request->header('link' => $self->_links_to_header);
     }
 
-    if ($self->_jsonize) {
+    if (ref $self->data && $self->content_type eq 'application/json') {
         $request->content(JSON::encode_json($self->data));
     }
     else {
@@ -168,8 +168,11 @@ sub populate {
         $self->siblings(\@siblings);
     }
 
-    if ($status == 200 && $self->_jsonize) {
-        $self->data(JSON::decode_json($self->data));
+    if ($status == 200) {
+        $self->content_type($http_response->content_type)
+            if $http_response->content_type;
+        $self->data(JSON::decode_json($self->data))
+            if $self->content_type eq 'application/json';
         $self->vclock($http_response->header('X-Riak-Vclock'));
     }
 }
@@ -298,7 +301,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 SYNOPSIS
 
