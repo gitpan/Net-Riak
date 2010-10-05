@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.08';
+  $Net::Riak::VERSION = '0.09';
 }
 
 # ABSTRACT: Interface to Riak
@@ -35,6 +35,7 @@ sub bucket {
 1;
 
 
+
 __END__
 =pod
 
@@ -44,7 +45,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -117,15 +118,15 @@ client_id for this client
 
 =head2 METHODS
 
-=head1 METHODS
+=over 4
 
-=head2 bucket
+=item bucket
 
     my $bucket = $client->bucket($name);
 
 Get the bucket by the specified name. Since buckets always exist, this will always return a L<Net::Riak::Bucket>
 
-=head2 is_alive
+=item is_alive
 
     if (!$client->is_alive) {
         ...
@@ -133,29 +134,31 @@ Get the bucket by the specified name. Since buckets always exist, this will alwa
 
 Check if the Riak server for this client is alive
 
-=head2 add
+=item add
 
     my $map_reduce = $client->add('bucket_name', 'key');
 
 Start assembling a Map/Reduce operation
 
-=head2 link
+=item link
 
     my $map_reduce = $client->link();
 
 Start assembling a Map/Reduce operation
 
-=head2 map
+=item map
 
     my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
 
 Start assembling a Map/Reduce operation
 
-=head2 reduce
+=item reduce
 
     my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
 
 Start assembling a Map/Reduce operation
+
+=back
 
 =head1 AUTHOR
 

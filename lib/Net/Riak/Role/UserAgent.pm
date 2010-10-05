@@ -1,6 +1,6 @@
 package Net::Riak::Role::UserAgent;
 BEGIN {
-  $Net::Riak::Role::UserAgent::VERSION = '0.08';
+  $Net::Riak::Role::UserAgent::VERSION = '0.09';
 }
 
 # ABSTRACT: useragent for Net::Riak
@@ -9,9 +9,9 @@ use Moose::Role;
 use LWP::UserAgent;
 
 has useragent => (
-    is => 'rw',
-    isa => 'LWP::UserAgent',
-    lazy => 1,
+    is      => 'rw',
+    isa     => 'LWP::UserAgent',
+    lazy    => 1,
     default => sub {
         my $self = shift;
 
@@ -22,7 +22,6 @@ has useragent => (
         @LWP::Protocol::http::EXTRA_SOCK_OPTS = %opts;
 
         my $ua = LWP::UserAgent->new;
-        $ua->timeout(3);
         $ua;
     }
 );
@@ -38,7 +37,7 @@ Net::Riak::Role::UserAgent - useragent for Net::Riak
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

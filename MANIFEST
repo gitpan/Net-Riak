@@ -30,6 +30,7 @@ t/04_bucket.t
 t/05_links.t
 t/06_host.t
 t/07_properties.t
+t/08_stream.t
 t/90_bug_links.t
 t/release-eol.t
 t/release-no-tabs.t

@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.08';
+  $Net::Riak::Object::VERSION = '0.09';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -301,7 +301,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -357,31 +357,31 @@ Return an array of Siblings
 
 =head2 METHODS
 
-=head1 METHODS
+=over 4
 
-=head2 count_links
+=item count_links
 
 Return the number of links
 
-=head2 append_link
+=item append_link
 
 Add a new link
 
-=head2 get_siblings
+=item get_siblings
 
 Return the number of siblings
 
-=head2 add_sibling
+=item add_sibling
 
 Add a new sibling
 
-=head2 count_siblings
+=item count_siblings
 
-=head2 get_sibling
+=item get_sibling
 
 Return a sibling
 
-=head2 store
+=item store
 
     $obj->store($w, $dw);
 
@@ -399,7 +399,7 @@ DW-value, wait for this many partitions to confirm the write before returning to
 
 =back
 
-=head2 load
+=item load
 
     $obj->load($w);
 
@@ -413,7 +413,7 @@ R-Value, wait for this many partitions to respond before returning to client.
 
 =back
 
-=head2 delete
+=item delete
 
     $obj->delete($dw);
 
@@ -427,55 +427,57 @@ DW-value. Wait until this many partitions have deleted the object before respond
 
 =back
 
-=head2 clear
+=item clear
 
     $obj->reset;
 
 Reset this object
 
-=head2 has_siblings
+=item has_siblings
 
     if ($obj->has_siblings) { ... }
 
 Return true if this object has siblings
 
-=head2 has_no_siblings
+=item has_no_siblings
 
    if ($obj->has_no_siblings) { ... }
 
 Return true if this object has no siblings
 
-=head2 populate
+=item populate
 
 Given the output of RiakUtils.http_request and a list of statuses, populate the object. Only for use by the Riak client library.
 
-=head2 add_link
+=item add_link
 
     $obj->add_link($obj2, "tag");
 
 Add a link to a L<Net::Riak::Object>
 
-=head2 remove_link
+=item remove_link
 
     $obj->remove_link($obj2, "tag");
 
 Remove a link to a L<Net::Riak::Object>
 
-=head2 add
+=item add
 
 Start assembling a Map/Reduce operation
 
-=head2 link
+=item link
 
 Start assembling a Map/Reduce operation
 
-=head2 map
+=item map
 
 Start assembling a Map/Reduce operation
 
-=head2 reduce
+=item reduce
 
 Start assembling a Map/Reduce operation
+
+=back
 
 =head1 AUTHOR
 

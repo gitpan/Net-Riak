@@ -1,6 +1,6 @@
 package Net::Riak::Role::MapReduce;
 BEGIN {
-  $Net::Riak::Role::MapReduce::VERSION = '0.08';
+  $Net::Riak::Role::MapReduce::VERSION = '0.09';
 }
 
 use Moose::Role;
@@ -23,7 +23,7 @@ sub link {
 sub map {
     my ($self, @args) = @_;
     my $mr = Net::Riak::MapReduce->new(client => $self->client);
-    $mr->mapd(@args);
+    $mr->map(@args);
     $mr;
 }
 
@@ -45,7 +45,7 @@ Net::Riak::Role::MapReduce
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.08
+    version 0.09
 
 SYNOPSIS
         my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
@@ -55,39 +55,38 @@ DESCRIPTION
         client_id for this client
 
   METHODS
-METHODS
-  bucket
-        my $bucket = $client->bucket($name);
+    bucket
+            my $bucket = $client->bucket($name);
 
-    Get the bucket by the specified name. Since buckets always exist, this
-    will always return a Net::Riak::Bucket
+        Get the bucket by the specified name. Since buckets always exist,
+        this will always return a Net::Riak::Bucket
 
-  is_alive
-        if (!$client->is_alive) {
-            ...
-        }
+    is_alive
+            if (!$client->is_alive) {
+                ...
+            }
 
-    Check if the Riak server for this client is alive
+        Check if the Riak server for this client is alive
 
-  add
-        my $map_reduce = $client->add('bucket_name', 'key');
+    add
+            my $map_reduce = $client->add('bucket_name', 'key');
 
-    Start assembling a Map/Reduce operation
+        Start assembling a Map/Reduce operation
 
-  link
-        my $map_reduce = $client->link();
+    link
+            my $map_reduce = $client->link();
 
-    Start assembling a Map/Reduce operation
+        Start assembling a Map/Reduce operation
 
-  map
-        my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
+    map
+            my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
 
-    Start assembling a Map/Reduce operation
+        Start assembling a Map/Reduce operation
 
-  reduce
-        my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
+    reduce
+            my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
 
-    Start assembling a Map/Reduce operation
+        Start assembling a Map/Reduce operation
 
 AUTHOR
     franck cuny <franck@lumberjaph.net>

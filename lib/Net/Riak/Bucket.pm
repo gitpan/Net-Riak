@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.08';
+  $Net::Riak::Bucket::VERSION = '0.09';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
@@ -48,8 +48,10 @@ sub allow_multiples {
 }
 
 sub get_keys {
-    my $self = shift;
-    my $properties = $self->get_properties({keys => 'true', props => 'false'});
+    my ($self, $params) = @_;
+    my $key_mode = delete($params->{stream}) ? 'stream' : 'true';
+    $params = { props => 'false', keys => $key_mode, %$params };
+    my $properties = $self->get_properties($params);
     return $properties->{keys};
 }
 
@@ -79,6 +81,9 @@ sub get_property {
 sub get_properties {
     my ($self, $params) = @_;
 
+    # Callbacks require stream mode
+    $params->{keys}  = 'stream' if $params->{cb};
+
     $params->{props} = 'true'  unless exists $params->{props};
     $params->{keys}  = 'false' unless exists $params->{keys};
 
@@ -92,7 +97,26 @@ sub get_properties {
         die "Error getting bucket properties: " . $response->status_line . "\n";
     }
 
-    return JSON::decode_json($response->content);
+    if ($params->{keys} ne 'stream') {
+        return JSON::decode_json($response->content);
+    }
+
+    # In streaming mode, aggregate keys from the multiple returned chunk objects
+    else {
+        my $json = JSON->new;
+        my $props = $json->incr_parse($response->content);
+        if ($params->{cb}) {
+            while (defined(my $obj = $json->incr_parse)) {
+                $params->{cb}->($_) foreach @{$obj->{keys}};
+            }
+            return %$props ? { props => $props } : {};
+        }
+        else {
+            my @keys = map { $_->{keys} && ref $_->{keys} eq 'ARRAY' ? @{$_->{keys}} : () }
+                $json->incr_parse;
+            return { props => $props, keys => \@keys };
+        }
+    }
 }
 
 sub set_properties {
@@ -132,15 +156,19 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
     my $client = Net::Riak->new(...);
     my $bucket = $client->bucket('foo');
-    my $object = $bucket->new_object('foo', {...});
+
+    # retrieve an existing object
+    my $obj1 = $bucket->get('foo');
+
+    # create/store a new object
+    my $obj2 = $bucket->new_object('foo2', {...});
     $object->store;
-    $object->get('foo2');
 
 =head1 DESCRIPTION
 
@@ -178,59 +206,90 @@ DW value setting for this client (default 2)
 
 =head2 METHODS
 
-=head1 METHODS
+=over 4
 
-=head2 new_object
+=item new_object
 
     my $obj = $bucket->new_object($key, $data, @args);
 
 Create a new L<Net::Riak::Object> object. Additional Object constructor arguments can be passed after $data. If $data is a reference and no explicit Object content_type is given in @args, the data will be serialised and stored as JSON.
 
-=head2 get
+=item get
 
     my $obj = $bucket->get($key, [$r]);
 
 Retrieve an object from Riak.
 
-=head2 n_val
+=item n_val
 
     my $n_val = $bucket->n_val;
 
 Get/set the N-value for this bucket, which is the number of replicas that will be written of each object in the bucket. Set this once before you write any data to the bucket, and never change it again, otherwise unpredictable things could happen. This should only be used if you know what you are doing.
 
-=head2 allow_multiples
+=item allow_multiples
 
     $bucket->allow_multiples(1|0);
 
 If set to True, then writes with conflicting data will be stored and returned to the client. This situation can be detected by calling has_siblings() and get_siblings(). This should only be used if you know what you are doing.
 
-=head2 get_keys
+=item get_keys
 
     my $keys = $bucket->get_keys;
+    my $keys = $bucket->get_keys($args);
 
-Return an arrayref of the list of keys for a bucket.
+Return an arrayref of the list of keys for a bucket. Optionally takes a hashref of named parameters. Supported parameters are:
 
-=head2 set_property
+=over 4
+
+=item stream => 1
+
+Uses key streaming mode to fetch the list of keys, which may be faster for large keyspaces.
+
+=item cb => sub { }
+
+A callback subroutine to be called for each key found (passed in as the only parameter). get_keys() returns nothing in callback mode.
+
+=back
+
+=item set_property
 
     $bucket->set_property({n_val => 2});
 
 Set a bucket property. This should only be used if you know what you are doing.
 
-=head2 get_property
+=item get_property
 
     my $prop = $bucket->get_property('n_val');
 
 Retrieve a bucket property.
 
-=head2 set_properties
+=item set_properties
 
 Set multiple bucket properties in one call. This should only be used if you know what you are doing.
 
-=head2 get_properties
+=item get_properties
 
-Retrieve an associative array of all bucket properties. By default, 'props' is set to true and 'keys' to false. You can change this default:
+Retrieve an associative array of all bucket properties, containing 'props' and 'keys' elements.
 
-    my $properties = $bucket->get_properties({keys=>'true'});
+Accepts a hashref of parameters. Supported parameters are:
+
+=over 4
+
+=item props => 'true'|'false'
+
+Whether to return bucket properties. Defaults to 'true' if no parameters are given.
+
+=item keys => 'true'|'false'|'stream'
+
+Whether to return bucket keys. If set to 'stream', uses key streaming mode, which may be faster for large keyspaces.
+
+=item cb => sub { }
+
+A callback subroutine to be called for each key found (passed in as the only parameter). Implies keys => 'stream'. Keys are omitted from the results hashref in callback mode.
+
+=back
+
+=back
 
 =head1 AUTHOR
 
