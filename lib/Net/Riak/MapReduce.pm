@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 BEGIN {
-  $Net::Riak::MapReduce::VERSION = '0.09';
+  $Net::Riak::MapReduce::VERSION = '0.10';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -13,7 +13,7 @@ use Net::Riak::LinkPhase;
 use Net::Riak::MapReducePhase;
 
 with 'Net::Riak::Role::Base' =>
-  {classes => [{name => 'client', required => 0}]};
+  {classes => [{name => 'client', required => 1}]};
 
 has phases => (
     traits     => ['Array'],
@@ -51,10 +51,17 @@ sub add {
     my $self = shift;
     my $arg  = shift;
 
+    if (ref $arg eq 'ARRAY') {
+        do{
+            $self->add_input($arg);
+        }while(my $arg = shift @_);
+        return $self;
+    }
+
     if (!scalar @_) {
         if (blessed($arg)) {
             $self->add_object($arg);
-          } else {
+        } else {
             $self->add_bucket($arg);
         }
     }
@@ -106,7 +113,7 @@ sub map {
     my $map_reduce = Net::Riak::MapReducePhase->new(
         type     => 'map',
         function => $function,
-        keep     => $options{keep} || JSON::false,
+        keep     => $options{keep} ? JSON::true : JSON::false,
         arg      => $options{arg} || [],
     );
     $self->add_phase($map_reduce);
@@ -162,13 +169,18 @@ sub run {
 
     my $content = JSON::encode_json($job);
 
-    my $request =
-      $self->client->request('POST', [$self->client->mapred_prefix]);
+    my $request = $self->client->new_request(
+        'POST', [$self->client->mapred_prefix]
+    );
     $request->content($content);
 
-    my $response = $self->client->useragent->request($request);
+    my $response = $self->client->send_request($request);
 
-    my $result   = JSON::decode_json($response->content);
+    unless ($response->is_success) {
+        die "MapReduce query failed: ".$response->status_line;
+    }
+
+    my $result = JSON::decode_json($response->content);
 
     if ( $timeout && ( $ua_timeout != $self->client->useragent->timeout() ) ) {
         $self->client->useragent->timeout($ua_timeout);
@@ -195,7 +207,6 @@ sub run {
 1;
 
 
-
 __END__
 =pod
 
@@ -205,21 +216,39 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
 
-    my $riak = Net::Riak->new( host => "http://10.0.0.127:8098/" );
-    my $bucket = $riak->bucket("mybucket");
+    use Net::Riak;
 
-    my $mapred = $riak->add("mybucket");
-    $mapred->map('function(v) { return [v]; }');
-    $mapred->reduce("function(v) { return v;}");
-    my $res = $mapred->run(10000);
+    my $riak = Net::Riak->new( host => "http://10.0.0.127:8098/" );
+    my $bucket = $riak->bucket("Cats");
+
+    my $query = $riak->add("Cats");
+    $query->map(
+        'function(v, d, a) { return [v]; }',
+        arg => [qw/some params to your function/]
+    );
+
+    $query->reduce("function(v) { return [v];}");
+    my $json = $query->run(10000);
+
+    # can also be used like:
+
+    my $query = Net::Riak::MapReduce->new(
+        client => $riak->client
+    );
+
+    # named functions
+    my $json = $query->add_bucket('Dogs')
+        ->map('Riak.mapValuesJson')
+        ->reduce('Your.SortFunction')
+        ->run;
 
 =head1 DESCRIPTION
 
-The RiakMapReduce object allows you to build up and run a map/reduce operation on Riak.
+The MapReduce object allows you to build up and run a map/reduce operations on Riak.
 
 =head2 ATTRIBUTES
 
@@ -235,29 +264,37 @@ The RiakMapReduce object allows you to build up and run a map/reduce operation o
 
 =back
 
-=head2 METHODS
+=head1 METHODS
 
-=over 4
+=head2 add
 
-=item add
-
-arguments: bucketname
+arguments: bucketname or arrays or L<Net::Riak::Object>
 
 return: a Net::Riak::MapReduce object
 
 Add inputs to a map/reduce operation. This method takes three different forms, depending on the provided inputs. You can specify either a RiakObject, a string bucket name, or a bucket, key, and additional arg.
 
-=item add_object
+Create a MapReduce job
 
-=item add_bucket_key_data
+    my $mapred = $riak->add( ["alice","p1"],["alice","p2"],["alice","p5"] );
 
-=item add_bucket
+Add your inputs to a MapReduce job
 
-=item link
+    $mapred->add( ["alice","p1"],["alice","p2"] );
+    $mapred->add( "alice", "p5" );
+    $mapred->add( $riak->bucket("alice")->get("p6") );
+
+=head2 add_object
+
+=head2 add_bucket_key_data
+
+=head2 add_bucket
+
+=head2 link
 
 arguments: bucketname, tag, keep
 
-return: self
+return: $self
 
 Add a link phase to the map/reduce operation.
 
@@ -267,43 +304,58 @@ The default value for tag is '_'.
 
 The flag argument means to flag whether to keep results from this stage in the map/reduce. (default False, unless this is the last step in the phase)
 
-=item map
+=head2 map
 
-arguments: function, options
+arguments: $function, %options
 
 return: self
+
+    ->map("function () {..}", keep => 0, args => ['foo', 'bar']);
+    ->map('Riak.mapValuesJson'); # de-serializes data into JSON
 
 Add a map phase to the map/reduce operation.
 
 functions is either a named javascript function (i: 'Riak.mapValues'), or an anonymous javascript function (ie: 'function(...) ....')
 
-options is an optional associative array containing 'languaga', 'keep' flag, and/or 'arg'
+%options is an optional associative array containing:
 
-=item reduce
+    language
+    keep - flag
+    arg - an arrayref of parameterss for the JavaScript function
 
-arguments: function, options
+=head2 reduce
 
-return: self
+arguments: $function, %options
+
+return: $self
+
+    ->reduce("function () {..}", keep => 1, args => ['foo', 'bar']);
 
 Add a reduce phase to the map/reduce operation.
 
 functions is either a named javascript function (i: 'Riak.mapValues'), or an anonymous javascript function (ie: 'function(...) ....')
 
-options is an optional associative array containing 'languaga', 'keep' flag, and/or 'arg'
+=head2 run
 
-=item run
+arguments: $function, %options
 
-arguments: function, options
+arguments: $timeout
 
-arguments: timeout
+return: arrayref
 
-return: array
+Run the map/reduce operation and attempt to de-serialize the JSON response to a perl structure. rayref of RiakLink objects if the last phase is a link phase.
 
-Run the map/reduce operation. Returns an array of results, or an array of RiakLink objects if the last phase is a link phase.
+Timeout in milliseconds,
 
-Timeout in milliseconds.
+=head2 SEE ALSO
 
-=back
+REST API
+
+https://wiki.basho.com/display/RIAK/MapReduce
+
+List of built-in named functions for map / reduce phases
+
+http://hg.basho.com/riak/src/tip/doc/js-mapreduce.org#cl-496
 
 =head1 AUTHOR
 

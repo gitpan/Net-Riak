@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST;
 BEGIN {
-  $Net::Riak::Role::REST::VERSION = '0.09';
+  $Net::Riak::Role::REST::VERSION = '0.10';
 }
 
 # ABSTRACT: role for REST operations
@@ -8,6 +8,10 @@ BEGIN {
 use URI;
 use HTTP::Request;
 use Moose::Role;
+
+requires 'http_request';
+requires 'http_response';
+requires 'useragent';
 
 sub _build_path {
     my ($self, $path) = @_;
@@ -23,10 +27,22 @@ sub _build_uri {
     $uri;
 }
 
-sub request {
+# constructs a HTTP::Request
+sub new_request {
     my ($self, $method, $path, $params) = @_;
     my $uri = $self->_build_uri($path, $params);
-    HTTP::Request->new($method => $uri);
+    return HTTP::Request->new($method => $uri);
+}
+
+# makes a HTTP::Request returns and stores a HTTP::Response
+sub send_request {
+    my ($self, $req) = @_;
+
+    $self->http_request($req);
+    my $r = $self->useragent->request($req);
+    $self->http_response($r);
+
+    return $r;
 }
 
 1;
@@ -40,7 +56,7 @@ Net::Riak::Role::REST - role for REST operations
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 AUTHOR
 

@@ -1,3 +1,10 @@
+0.10 Tue 02 Nov 2010 03:34:16 PM CET  
+    - add support of array arguments in Net::Riak::MapReduce->add() (Germain Maurice)
+    - add 204 to Object::store expected status codes (Gavin Carr)
+    - refactor build link logic (Ben Hengst)
+    - requests and responses now stored for debugging (Robin Edwards)
+    - documentation updated (Robin Edwards)
+
 0.09 Tue 05 Oct 2010 12:03:59 PM CEST  
     - typo
     - when executing a map/reduce, if the timeout of the map/reduce is higher

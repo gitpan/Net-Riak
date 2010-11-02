@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.09';
+  $Net::Riak::VERSION = '0.10';
 }
 
 # ABSTRACT: Interface to Riak
@@ -16,7 +16,7 @@ has client => (
     is       => 'rw',
     isa      => 'Net::Riak::Client',
     required => 1,
-    handles  => [qw/request useragent is_alive/]
+    handles  => [qw/is_alive http_request http_response/]
 );
 
 sub BUILDARGS {
@@ -35,7 +35,6 @@ sub bucket {
 1;
 
 
-
 __END__
 =pod
 
@@ -45,7 +44,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
 
@@ -55,6 +54,8 @@ version 0.09
     $obj->store;
 
     my $obj = $bucket->get('new_post');
+    my $req = $client->http_request; # last request
+    $client->http_response # last response
 
 =head1 DESCRIPTION
 
@@ -116,17 +117,25 @@ client_id for this client
 
 =back
 
-=head2 METHODS
+=head1 METHODS
 
-=over 4
+=head2 http_request
 
-=item bucket
+Returns the HTTP::Request object from the last request
+
+=head2 http_response
+
+Returns a HTTP::Response object from the last request
+
+=head1 METHODS
+
+=head2 bucket
 
     my $bucket = $client->bucket($name);
 
 Get the bucket by the specified name. Since buckets always exist, this will always return a L<Net::Riak::Bucket>
 
-=item is_alive
+=head2 is_alive
 
     if (!$client->is_alive) {
         ...
@@ -134,31 +143,33 @@ Get the bucket by the specified name. Since buckets always exist, this will alwa
 
 Check if the Riak server for this client is alive
 
-=item add
+=head2 add
 
     my $map_reduce = $client->add('bucket_name', 'key');
 
 Start assembling a Map/Reduce operation
 
-=item link
+=head2 link
 
     my $map_reduce = $client->link();
 
 Start assembling a Map/Reduce operation
 
-=item map
+=head2 map
 
     my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
 
 Start assembling a Map/Reduce operation
 
-=item reduce
+=head2 reduce
 
     my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
 
 Start assembling a Map/Reduce operation
 
-=back
+=head2 SEE ALSO
+
+Net::Riak::MapReduce
 
 =head1 AUTHOR
 

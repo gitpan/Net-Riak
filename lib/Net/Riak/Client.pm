@@ -1,16 +1,14 @@
 package Net::Riak::Client;
 BEGIN {
-  $Net::Riak::Client::VERSION = '0.09';
+  $Net::Riak::Client::VERSION = '0.10';
 }
 
 use Moose;
 use MIME::Base64;
+use Moose::Util::TypeConstraints;
 
-with qw/
-  Net::Riak::Role::REST
-  Net::Riak::Role::UserAgent
-  Net::Riak::Role::Hosts
-  /;
+class_type 'HTTP::Request';
+class_type 'HTTP::Response';
 
 has prefix => (
     is      => 'rw',
@@ -32,6 +30,24 @@ has client_id => (
     isa        => 'Str',
     lazy_build => 1,
 );
+has http_request => (
+    is => 'rw',
+    isa => 'HTTP::Request',
+);
+
+has http_response => (
+    is => 'rw',
+    isa => 'HTTP::Response',
+    handles => ['is_success']
+);
+
+with 'Net::Riak::Role::UserAgent';
+with qw/
+  Net::Riak::Role::REST
+  Net::Riak::Role::Hosts
+  /;
+
+
 
 sub _build_client_id {
     "perl_net_riak" . encode_base64(int(rand(10737411824)), '');
@@ -39,9 +55,9 @@ sub _build_client_id {
 
 sub is_alive {
     my $self     = shift;
-    my $request  = $self->request('GET', ['ping']);
-    my $response = $self->useragent->request($request);
-    $response->is_success ? return 1 : return 0;
+    my $request  = $self->new_request('GET', ['ping']);
+    my $response = $self->send_request($request);
+    $self->is_success ? return 1 : return 0;
 }
 
 1;
@@ -55,7 +71,7 @@ Net::Riak::Client
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.09
+    version 0.10
 
 SYNOPSIS
         my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
@@ -11,6 +11,8 @@ SYNOPSIS
         $obj->store;
 
         my $obj = $bucket->get('new_post');
+        my $req = $client->http_request; # last request
+        $client->http_response # last response
 
 DESCRIPTION
   ATTRIBUTES
@@ -54,39 +56,49 @@ DESCRIPTION
     client_id
         client_id for this client
 
-  METHODS
-    bucket
-            my $bucket = $client->bucket($name);
+METHODS
+  http_request
+    Returns the HTTP::Request object from the last request
 
-        Get the bucket by the specified name. Since buckets always exist,
-        this will always return a Net::Riak::Bucket
+  http_response
+    Returns a HTTP::Response object from the last request
 
-    is_alive
-            if (!$client->is_alive) {
-                ...
-            }
+METHODS
+  bucket
+        my $bucket = $client->bucket($name);
 
-        Check if the Riak server for this client is alive
+    Get the bucket by the specified name. Since buckets always exist, this
+    will always return a Net::Riak::Bucket
 
-    add
-            my $map_reduce = $client->add('bucket_name', 'key');
+  is_alive
+        if (!$client->is_alive) {
+            ...
+        }
 
-        Start assembling a Map/Reduce operation
+    Check if the Riak server for this client is alive
 
-    link
-            my $map_reduce = $client->link();
+  add
+        my $map_reduce = $client->add('bucket_name', 'key');
 
-        Start assembling a Map/Reduce operation
+    Start assembling a Map/Reduce operation
 
-    map
-            my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
+  link
+        my $map_reduce = $client->link();
 
-        Start assembling a Map/Reduce operation
+    Start assembling a Map/Reduce operation
 
-    reduce
-            my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
+  map
+        my $map_reduce = $client->add('bucket_name', 'key')->map("function ...");
 
-        Start assembling a Map/Reduce operation
+    Start assembling a Map/Reduce operation
+
+  reduce
+        my $map_reduce = $client->add(..)->map(..)->reduce("function ...");
+
+    Start assembling a Map/Reduce operation
+
+  SEE ALSO
+    Net::Riak::MapReduce
 
 AUTHOR
     franck cuny <franck@lumberjaph.net>

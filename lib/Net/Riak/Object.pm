@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.09';
+  $Net::Riak::Object::VERSION = '0.10';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -64,7 +64,7 @@ sub store {
     my $params = {returnbody => 'true', w => $w, dw => $dw};
 
     my $request =
-      $self->client->request('PUT',
+      $self->client->new_request('PUT',
         [$self->client->prefix, $self->bucket->name, $self->key], $params);
 
     $request->header('X-Riak-ClientID' => $self->client->client_id);
@@ -85,8 +85,8 @@ sub store {
         $request->content($self->data);
     }
 
-    my $response = $self->client->useragent->request($request);
-    $self->populate($response, [200, 300]);
+    my $response = $self->client->send_request($request);
+    $self->populate($response, [200, 204, 300]);
     $self;
 }
 
@@ -101,10 +101,10 @@ sub load {
     my $params = {r => $self->r};
 
     my $request =
-      $self->client->request('GET',
+      $self->client->new_request('GET',
         [$self->client->prefix, $self->bucket->name, $self->key], $params);
 
-    my $response = $self->client->useragent->request($request);
+    my $response = $self->client->send_request($request);
     $self->populate($response, [200, 300, 404]);
     $self;
 }
@@ -116,10 +116,10 @@ sub delete {
     my $params = {dw => $dw};
 
     my $request =
-      $self->client->request('DELETE',
+      $self->client->new_request('DELETE',
         [$self->client->prefix, $self->bucket->name, $self->key], $params);
 
-    my $response = $self->client->useragent->request($request);
+    my $response = $self->client->send_request($request);
     $self->populate($response, [204, 404]);
     $self;
 }
@@ -208,9 +208,9 @@ sub sibling {
     my $params = {r => $r, vtag => $vtag};
 
     my $request =
-      $self->client->request('GET',
+      $self->client->new_request('GET',
         [$self->client->prefix, $self->bucket->name, $self->key], $params);
-    my $response = $self->client->useragent->request($request);
+    my $response = $self->client->send_request($request);
 
     my $obj = Net::Riak::Object->new(
         client => $self->client,
@@ -222,38 +222,33 @@ sub sibling {
     $obj;
 }
 
+
+sub _build_link {
+    my ($self,$obj,$tag) = @_;
+    blessed $obj && $obj->isa('Net::Riak::Link')
+    ? $obj
+    : Net::Riak::Link->new(
+          bucket => $self->bucket,
+          key    => $self->key,
+          tag    => $tag || $self->bucket->name,
+      );
+}
+
+around [qw{append_link remove_link add_link}] => sub{
+   my $next = shift;
+   my $self = shift;
+   $self->$next($self->_build_link(@_));
+};
+
 sub add_link {
-    my ($self, $obj, $tag) = @_;
-    my $new_link;
-    if (blessed $obj && $obj->isa('Net::Riak::Link')) {
-        $new_link = $obj;
-    }
-    else {
-        $new_link = Net::Riak::Link->new(
-            bucket => $self->bucket,
-            key    => $self->key,
-            tag    => $tag || $self->bucket->name,
-        );
-    }
-    $self->remove_link($new_link);
-    $self->append_link($new_link);
+    my ($self, $link) = @_;
+    $self->remove_link($link);
+    $self->append_link($link);
     $self;
 }
 
 sub remove_link {
-    my ($self, $obj, $tag) = @_;
-    my $new_link;
-    if (blessed $obj && $obj->isa('Net::Riak::Link')) {
-        $new_link = $obj;
-    }
-    else {
-        $new_link = Net::Riak::Link->new(
-            bucket => $self->bucket,
-            key    => $self->key,
-            tag    => $tag || ''
-        );
-    }
-
+    my ($self, $link) = @_;
     # XXX purge links!
 }
 
@@ -301,7 +296,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
 
