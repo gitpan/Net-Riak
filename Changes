@@ -1,3 +1,7 @@
+0.11 Wed 03 Nov 2010 03:01:10 PM CET  
+    - update POD (franck cuny)
+    - fix wrong clearer name (_clear_siblings instead of _clear_links)
+
 0.10 Tue 02 Nov 2010 03:34:16 PM CET  
     - add support of array arguments in Net::Riak::MapReduce->add() (Germain Maurice)
     - add 204 to Object::store expected status codes (Gavin Carr)

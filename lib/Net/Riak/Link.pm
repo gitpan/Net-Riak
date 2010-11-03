@@ -1,6 +1,6 @@
 package Net::Riak::Link;
 BEGIN {
-  $Net::Riak::Link::VERSION = '0.10';
+  $Net::Riak::Link::VERSION = '0.11';
 }
 
 # ABSTRACT: the riaklink object represents a link from one Riak object to another
@@ -49,7 +49,7 @@ Net::Riak::Link - the riaklink object represents a link from one Riak object to 
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 AUTHOR
 

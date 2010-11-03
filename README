@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.10
+    version 0.11
 
 SYNOPSIS
         my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
@@ -10,7 +10,9 @@ SYNOPSIS
         my $obj    = $bucket->new_object('new_post', {title => 'foo', content => 'bar'});
         $obj->store;
 
-        my $obj = $bucket->get('new_post');
+        $obj = $bucket->get('new_post');
+        say "title for ".$obj->key." is ".$obj->data->{title};
+
         my $req = $client->http_request; # last request
         $client->http_response # last response
 

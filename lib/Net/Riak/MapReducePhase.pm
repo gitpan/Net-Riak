@@ -1,6 +1,6 @@
 package Net::Riak::MapReducePhase;
 BEGIN {
-  $Net::Riak::MapReducePhase::VERSION = '0.10';
+  $Net::Riak::MapReducePhase::VERSION = '0.11';
 }
 
 use Moose;
@@ -41,7 +41,7 @@ Net::Riak::MapReducePhase
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 AUTHOR
 
