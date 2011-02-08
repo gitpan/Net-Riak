@@ -1,6 +1,6 @@
 package Net::Riak::Role::MapReduce;
 BEGIN {
-  $Net::Riak::Role::MapReduce::VERSION = '0.11';
+  $Net::Riak::Role::MapReduce::VERSION = '0.13';
 }
 
 use Moose::Role;
@@ -45,7 +45,7 @@ Net::Riak::Role::MapReduce
 
 =head1 VERSION
 
-version 0.11
+version 0.13
 
 =head1 AUTHOR
 
@@ -53,7 +53,7 @@ franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by linkfluence.
+This software is copyright (c) 2011 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

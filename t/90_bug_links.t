@@ -1,16 +1,17 @@
-use Data::Dumper;
+use strict;
+use warnings;
 use Net::Riak;
 use Test::More;
 
 BEGIN {
-    unless ( $ENV{RELEASE_TESTING} ) {
+    unless ( $ENV{RIAK_REST_HOST} ) {
         require Test::More;
         Test::More::plan(
-            skip_all => 'these tests are for release candidate testing' );
+            skip_all => 'RIAK_REST_HOST not set.. skipping' );
     }
 }
 
-ok my $client = Net::Riak->new(host => 'http://127.0.0.1:8098'), 'client created';
+ok my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST}), 'client created';
 
 # set up a bucket containing two person/user records and store them
 my $bucket_one = $client->bucket('ONE');

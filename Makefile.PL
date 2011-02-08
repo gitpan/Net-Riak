@@ -12,7 +12,6 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'Interface to Riak',
   'AUTHOR' => 'franck cuny <franck@lumberjaph.net>',
   'BUILD_REQUIRES' => {
-    'Data::Dumper' => '0',
     'HTTP::Response' => '0',
     'Test::More' => '0',
     'YAML::Syck' => '0'
@@ -28,6 +27,7 @@ my %WriteMakefileArgs = (
     'Carp' => '0',
     'HTTP::Request' => '0',
     'JSON' => '0',
+    'LWP::ConnCache' => '0',
     'LWP::UserAgent' => '0',
     'MIME::Base64' => '0',
     'Moose' => '0',
@@ -37,7 +37,7 @@ my %WriteMakefileArgs = (
     'Scalar::Util' => '0',
     'URI' => '0'
   },
-  'VERSION' => '0.11',
+  'VERSION' => '0.13',
   'test' => {
     'TESTS' => 't/*.t'
   }

@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.11';
+  $Net::Riak::Object::VERSION = '0.13';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -15,7 +15,7 @@ with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
 with 'Net::Riak::Role::Base' => {classes =>
       [{name => 'bucket', required => 1}, {name => 'client', required => 1}]};
 
-has key => (is => 'rw', isa => 'Str', required => 1);
+has key => (is => 'rw', isa => 'Str', required => 0);
 has status       => (is => 'rw', isa => 'Int');
 has exists       => (is => 'rw', isa => 'Bool', default => 0,);
 has data         => (is => 'rw', isa => 'Any', clearer => '_clear_data');
@@ -62,10 +62,14 @@ sub store {
     $dw ||= $self->dw;
 
     my $params = {returnbody => 'true', w => $w, dw => $dw};
+    my $path   = [$self->client->prefix, $self->bucket->name];
+    my $method = 'POST';
+    if (defined $self->key) {
+      push @$path, $self->key;
+      $method = 'PUT';
+    } 
 
-    my $request =
-      $self->client->new_request('PUT',
-        [$self->client->prefix, $self->bucket->name, $self->key], $params);
+    my $request = $self->client->new_request($method, $path, $params);
 
     $request->header('X-Riak-ClientID' => $self->client->client_id);
     $request->header('Content-Type'    => $self->content_type);
@@ -86,7 +90,7 @@ sub store {
     }
 
     my $response = $self->client->send_request($request);
-    $self->populate($response, [200, 204, 300]);
+    $self->populate($response, [200, 201, 204, 300]);
     $self;
 }
 
@@ -146,9 +150,9 @@ sub populate {
     $self->data($http_response->content);
 
     if (!grep { $status == $_ } @$expected) {
-        croak "Expected status "
+        confess "Expected status "
           . (join(', ', @$expected))
-          . ", received $status";
+          . ", received $status"
     }
 
     if ($status == 404) {
@@ -167,8 +171,15 @@ sub populate {
         shift @siblings;
         $self->siblings(\@siblings);
     }
+    
+    if ($status == 201) {
+        my $location = $http_response->header('location');
+        my ($key)    = ($location =~ m!/([^/]+)$!);
+        $self->key($key);
+    } 
+    
 
-    if ($status == 200) {
+    if ($status == 200 || $status == 201) {
         $self->content_type($http_response->content_type)
             if $http_response->content_type;
         $self->data(JSON::decode_json($self->data))
@@ -228,8 +239,8 @@ sub _build_link {
     blessed $obj && $obj->isa('Net::Riak::Link')
     ? $obj
     : Net::Riak::Link->new(
-          bucket => $self->bucket,
-          key    => $self->key,
+          bucket => $obj->bucket,
+          key    => $obj->key,
           tag    => $tag || $self->bucket->name,
       );
 }
@@ -296,7 +307,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.11
+version 0.13
 
 =head1 SYNOPSIS
 
@@ -480,7 +491,7 @@ franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by linkfluence.
+This software is copyright (c) 2011 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

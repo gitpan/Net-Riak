@@ -1,6 +1,6 @@
 package Net::Riak::LinkPhase;
 BEGIN {
-  $Net::Riak::LinkPhase::VERSION = '0.11';
+  $Net::Riak::LinkPhase::VERSION = '0.13';
 }
 
 use Moose;
@@ -31,7 +31,7 @@ Net::Riak::LinkPhase
 
 =head1 VERSION
 
-version 0.11
+version 0.13
 
 =head1 AUTHOR
 
@@ -39,7 +39,7 @@ franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by linkfluence.
+This software is copyright (c) 2011 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

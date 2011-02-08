@@ -2,10 +2,14 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.11
+    version 0.13
 
 SYNOPSIS
-        my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
+        my $client = Net::Riak->new(
+            host => 'http://10.0.0.40:8098', 
+            ua_timeout => 900
+        );
+
         my $bucket = $client->bucket('blog');
         my $obj    = $bucket->new_object('new_post', {title => 'foo', content => 'bar'});
         $obj->store;
@@ -58,6 +62,9 @@ DESCRIPTION
     client_id
         client_id for this client
 
+    ua_timeout
+        timeout for LWP::UserAgent in seconds, defaults to 3.
+
 METHODS
   http_request
     Returns the HTTP::Request object from the last request
@@ -106,8 +113,18 @@ AUTHOR
     franck cuny <franck@lumberjaph.net>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by linkfluence.
+    This software is copyright (c) 2011 by linkfluence.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 126:
+        '=item' outside of any '=over'
+
+    Around line 130:
+        You forgot a '=back' before '=head1'
 

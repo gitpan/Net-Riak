@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.11';
+  $Net::Riak::VERSION = '0.13';
 }
 
 # ABSTRACT: Interface to Riak
@@ -44,11 +44,15 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.11
+version 0.13
 
 =head1 SYNOPSIS
 
-    my $client = Net::Riak->new(host => 'http://10.0.0.40:8098');
+    my $client = Net::Riak->new(
+        host => 'http://10.0.0.40:8098', 
+        ua_timeout => 900
+    );
+
     my $bucket = $client->bucket('blog');
     my $obj    = $bucket->new_object('new_post', {title => 'foo', content => 'bar'});
     $obj->store;
@@ -119,6 +123,10 @@ client_id for this client
 
 =back
 
+=item B<ua_timeout>
+
+timeout for L<LWP::UserAgent> in seconds, defaults to 3.
+
 =head1 METHODS
 
 =head2 http_request
@@ -179,7 +187,7 @@ franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by linkfluence.
+This software is copyright (c) 2011 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

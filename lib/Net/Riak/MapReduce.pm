@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 BEGIN {
-  $Net::Riak::MapReduce::VERSION = '0.11';
+  $Net::Riak::MapReduce::VERSION = '0.13';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -59,8 +59,10 @@ sub add {
     }
 
     if (!scalar @_) {
-        if (blessed($arg)) {
+        if ($arg->isa('Net::Riak::Object')) {
             $self->add_object($arg);
+        } elsif ($arg->isa('Net::Riak::Bucket')) {
+            $self->add_bucket($arg->name);
         } else {
             $self->add_bucket($arg);
         }
@@ -167,6 +169,7 @@ sub run {
         $job->{timeout} = $timeout;
     }
 
+
     my $content = JSON::encode_json($job);
 
     my $request = $self->client->new_request(
@@ -216,7 +219,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.11
+version 0.13
 
 =head1 SYNOPSIS
 
@@ -268,7 +271,7 @@ The MapReduce object allows you to build up and run a map/reduce operations on R
 
 =head2 add
 
-arguments: bucketname or arrays or L<Net::Riak::Object>
+arguments: L<Net::Riak::Bucket> / Bucket name /  L<Net::Riak::Object> / Array
 
 return: a Net::Riak::MapReduce object
 
@@ -363,7 +366,7 @@ franck cuny <franck@lumberjaph.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by linkfluence.
+This software is copyright (c) 2011 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

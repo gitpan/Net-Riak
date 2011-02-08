@@ -1,3 +1,15 @@
+0.13 (UNRELEASED)
+	- Enviroment variable for riak when running tests (Robin Edwards)
+	- Connection caching (Andrew Sayers)
+	- Automatic key generation support (Simon Wistow)
+
+0.12
+    - fix _build_link method (reported by gphat)
+    - added useragent timeout parameter (Robin Edwards)
+    - added expected status message (Robin Edwards)
+    - added delete_object method to Net::Riak::Bucket (Robin Edwards)
+    - support for adding bucket as objects in add method (Robin Edwards)
+
 0.11 Wed 03 Nov 2010 03:01:10 PM CET  
     - update POD (franck cuny)
     - fix wrong clearer name (_clear_siblings instead of _clear_links)

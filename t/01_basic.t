@@ -5,25 +5,24 @@ use Net::Riak;
 use YAML::Syck;
 
 BEGIN {
-  unless ($ENV{RELEASE_TESTING}) {
+  unless ($ENV{RIAK_REST_HOST}) {
     require Test::More;
-    Test::More::plan(skip_all => 'these tests are for release candidate testing');
+    Test::More::plan(skip_all => 'RIAK_REST_HOST not set.. skipping');
   }
 }
 
-my $host = 'http://localhost:8098';
-my $bucket_name = 'test4';
+my $bucket_name = 'RIAK_TEST_'.time;
 my $bucket_multi = 'multiBucket2';
 
 # is alive
 {
-    ok my $client = Net::Riak->new(), 'client created';
+    ok my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST}), 'client created';
     ok $client->is_alive, 'riak is alive';
 }
 
 # store and get
 {
-    ok my $client = Net::Riak->new(), 'client created';
+    ok my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST}), 'client created';
     ok my $bucket = $client->bucket($bucket_name), 'got bucket test';
     my $content = [int(rand(100))];
     ok my $obj = $bucket->new_object('foo', $content),
@@ -36,7 +35,7 @@ my $bucket_multi = 'multiBucket2';
 
 # missing object
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj    = $bucket->get("missing");
     ok !$obj->data, 'no data';
@@ -44,7 +43,7 @@ my $bucket_multi = 'multiBucket2';
 
 # delete object
 {
-    my $client  = Net::Riak->new();
+    my $client  = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket  = $client->bucket($bucket_name);
     my $content = [int(rand(100))];
     my $obj     = $bucket->new_object('foo', $content);
@@ -58,7 +57,7 @@ my $bucket_multi = 'multiBucket2';
 
 # test set bucket properties
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     $bucket->allow_multiples(1);
     my $props = $bucket->get_properties;
@@ -73,14 +72,14 @@ my $bucket_multi = 'multiBucket2';
 
 # test siblings
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_multi);
     $bucket->allow_multiples(1);
     ok $bucket->allow_multiples, 'multiples set to 1';
     my $obj = $bucket->get('foo');
     $obj->delete;
     for(1..5) {
-        my $client = Net::Riak->new();
+        my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
         my $bucket = $client->bucket($bucket_multi);
         $obj = $bucket->new_object('foo', [int(rand(100))]);
         $obj->store;
@@ -103,7 +102,7 @@ my $bucket_multi = 'multiBucket2';
 
 # test js source map
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj    = $bucket->new_object('foo', [2])->store;
     my $result =
@@ -124,7 +123,7 @@ my $bucket_multi = 'multiBucket2';
 
 # javascript source map reduce
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj    = $bucket->new_object('foo', [2])->store;
     $obj = $bucket->new_object('bar', [3])->store;
@@ -138,7 +137,7 @@ my $bucket_multi = 'multiBucket2';
 
 # javascript named map reduce
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj    = $bucket->new_object("foo", [2])->store;
     $obj = $bucket->new_object("bar", [3])->store;
@@ -152,7 +151,7 @@ my $bucket_multi = 'multiBucket2';
 
 # javascript bucket map reduce
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket("bucket_".int(rand(10)));
     $bucket->new_object("foo", [2])->store;
     $bucket->new_object("bar", [3])->store;
@@ -165,7 +164,7 @@ my $bucket_multi = 'multiBucket2';
 
 # javascript map reduce from object
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     $bucket->new_object("foo", [2])->store;
     my $obj = $bucket->get("foo");
@@ -175,7 +174,7 @@ my $bucket_multi = 'multiBucket2';
 
 # store and get links
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj = $bucket->new_object("foo", [2]);
     my $obj1 = $bucket->new_object("foo1", {test => 1})->store;
@@ -192,7 +191,7 @@ my $bucket_multi = 'multiBucket2';
 
 # link walking
 {
-    my $client = Net::Riak->new();
+    my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
     my $bucket = $client->bucket($bucket_name);
     my $obj    = $bucket->new_object("foo", [2]);
     my $obj1   = $bucket->new_object("foo1", {test => 1})->store;
