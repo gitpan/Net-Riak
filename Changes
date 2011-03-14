@@ -1,4 +1,7 @@
-0.13 (UNRELEASED)
+0.14 Mon Mar 14 08:59:10 GMT 2011
+	- fixed delete link (Simon Wistow)
+
+0.13 Tue, 08 Feb 2011 16:40:07 GMT
 	- Enviroment variable for riak when running tests (Robin Edwards)
 	- Connection caching (Andrew Sayers)
 	- Automatic key generation support (Simon Wistow)

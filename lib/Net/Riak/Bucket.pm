@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.13';
+  $Net::Riak::Bucket::VERSION = '0.14';
 }
 
 # ABSTRACT: Access and change information about a Riak bucket
@@ -170,7 +170,7 @@ Net::Riak::Bucket - Access and change information about a Riak bucket
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 

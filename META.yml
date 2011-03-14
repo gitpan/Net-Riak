@@ -28,7 +28,7 @@ requires:
   MooseX::Role::Parameterized: 0
   Scalar::Util: 0
   URI: 0
-version: 0.13
+version: 0.14
 x_Dist_Zilla:
   plugins:
     -
@@ -100,10 +100,6 @@ x_Dist_Zilla:
       name: PkgVersion
       version: 4.200003
     -
-      class: Dist::Zilla::Plugin::PodSyntaxTests
-      name: PodSyntaxTests
-      version: 4.200003
-    -
       class: Dist::Zilla::Plugin::PodCoverageTests
       name: PodCoverageTests
       version: 4.200003
@@ -111,10 +107,6 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::NoTabsTests
       name: NoTabsTests
       version: 0.01
-    -
-      class: Dist::Zilla::Plugin::EOLTests
-      name: EOLTests
-      version: 0.02
     -
       class: Dist::Zilla::Plugin::PodWeaver
       name: PodWeaver

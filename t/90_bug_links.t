@@ -60,4 +60,7 @@ my $links = $test_links->links;
 is $links->[0]->key, 'griffinp', 'good owner for first link';
 is $links->[1]->key, 'griffins', 'good owner for second link';
 
+$test_links->remove_link($links->[0]);
+$links = $test_links->links;
+is $links->[0]->key, 'griffins', 'good owner for second link after a remove link';
 done_testing;

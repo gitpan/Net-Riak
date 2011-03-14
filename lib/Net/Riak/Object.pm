@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.13';
+  $Net::Riak::Object::VERSION = '0.14';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -259,8 +259,11 @@ sub add_link {
 }
 
 sub remove_link {
-    my ($self, $link) = @_;
-    # XXX purge links!
+   my ($self, $link) = @_;
+   my @links = grep { $_->key ne $link->key } @{$self->links};
+   $self->_clear_links;
+   $self->append_link($_) for @links;
+   $self;
 }
 
 sub add {
@@ -307,7 +310,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 
