@@ -1,6 +1,6 @@
 package Net::Riak::Link;
 BEGIN {
-  $Net::Riak::Link::VERSION = '0.14';
+  $Net::Riak::Link::VERSION = '0.15';
 }
 
 # ABSTRACT: the riaklink object represents a link from one Riak object to another
@@ -23,22 +23,7 @@ has tag => (
     default => sub {(shift)->bucket->name}
 );
 
-sub to_link_header {
-    my ($self, $client) = @_;
-
-    $client ||= $self->client;
-
-    my $link = '';
-    $link .= '</';
-    $link .= $client->prefix . '/';
-    $link .= $self->bucket->name . '/';
-    $link .= $self->key . '>; riaktag="';
-    $link .= $self->tag . '"';
-    return $link;
-}
-
 1;
-
 
 __END__
 =pod
@@ -49,11 +34,11 @@ Net::Riak::Link - the riaklink object represents a link from one Riak object to 
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 AUTHOR
 
-franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

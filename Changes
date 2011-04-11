@@ -1,3 +1,19 @@
+0.15 
+	- fixed link encoding (Simon Wistow)
+	- added stats method for REST
+	- added server_info method for PBC
+	- added list bucket support for both protocols (0.14+ for REST)
+    - added PBC support
+	- added Test::Riak for running tests on both protocols
+    - added disable_return_body flag, in REST mode prevents body being returned on store
+
+    DEPRECATIONS
+    - $object->status please call $object->client->status (for REST only)
+    - $object->count_links, added ->has_links and ->all_links
+    - disable_return_body will become the default in 0.17
+    - support for providing multiple hosts when connecting (only supported by REST)
+      all load balancing code to be moved out of Net::Riak by 0.17.
+
 0.14 Mon Mar 14 08:59:10 GMT 2011
 	- fixed delete link (Simon Wistow)
 

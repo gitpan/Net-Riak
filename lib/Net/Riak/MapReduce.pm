@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 BEGIN {
-  $Net::Riak::MapReduce::VERSION = '0.14';
+  $Net::Riak::MapReduce::VERSION = '0.15';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -8,6 +8,8 @@ BEGIN {
 use JSON;
 use Moose;
 use Scalar::Util;
+
+use Data::Dumper;
 
 use Net::Riak::LinkPhase;
 use Net::Riak::MapReducePhase;
@@ -159,35 +161,12 @@ sub run {
         $inputs = $self->inputs;
     }
 
-    my $ua_timeout = $self->client->useragent->timeout();
-
     my $job = {inputs => $inputs, query => $query};
-    if ($timeout) {
-        if ($ua_timeout < ($timeout/1000)) {
-            $self->client->useragent->timeout(int($timeout/1000));
-        }
-        $job->{timeout} = $timeout;
-    }
 
+    # how phases set to 'keep'.
+    my $p = scalar ( grep { $_->keep } $self->phases);
 
-    my $content = JSON::encode_json($job);
-
-    my $request = $self->client->new_request(
-        'POST', [$self->client->mapred_prefix]
-    );
-    $request->content($content);
-
-    my $response = $self->client->send_request($request);
-
-    unless ($response->is_success) {
-        die "MapReduce query failed: ".$response->status_line;
-    }
-
-    my $result = JSON::decode_json($response->content);
-
-    if ( $timeout && ( $ua_timeout != $self->client->useragent->timeout() ) ) {
-        $self->client->useragent->timeout($ua_timeout);
-    }
+    my $result = $self->client->execute_job($job, $timeout, $p);
 
     my @phases = $self->phases;
     if (ref $phases[-1] ne 'Net::Riak::LinkPhase') {
@@ -219,7 +198,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -362,7 +341,7 @@ http://hg.basho.com/riak/src/tip/doc/js-mapreduce.org#cl-496
 
 =head1 AUTHOR
 
-franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

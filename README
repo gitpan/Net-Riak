@@ -2,12 +2,21 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.14
+    version 0.15
 
 SYNOPSIS
+        # REST interface
         my $client = Net::Riak->new(
-            host => 'http://10.0.0.40:8098', 
-            ua_timeout => 900
+            host => 'http://10.0.0.40:8098',
+            ua_timeout => 900,
+            disable_return_body => 1
+        );
+
+        # Or PBC interface.
+        my $client = Net::Riak->new(
+            transport => 'PBC',
+            host => '10.0.0.40',
+            port => 8080
         );
 
         my $bucket = $client->bucket('blog');
@@ -17,35 +26,27 @@ SYNOPSIS
         $obj = $bucket->get('new_post');
         say "title for ".$obj->key." is ".$obj->data->{title};
 
+        # When using the REST client you may access the last request and response.
+
         my $req = $client->http_request; # last request
         $client->http_response # last response
 
 DESCRIPTION
   ATTRIBUTES
     host
-        URL of the node (default 'http://127.0.0.1:8098'). If your ring is
-        composed with more than one node, you can configure the client to
-        hit more than one host, instead of hitting always the same node. For
-        this, you can do one of the following:
+        REST: The URL of the node
 
-        all nodes equals
-                my $riak = Net::Riak->new(
-                    host => [
-                        'http://10.0.0.40:8098',
-                        'http://10.0.0.41:8098'
-                    ]
-                );
+        PBC: The hostname of the node
 
-        give weight to nodes
-                my $riak = Net::Riak->new(
-                    host => [
-                        {node => 'http://10.0.0.40:8098', weight => '0.2'},
-                        {node => 'http://10.0.0.41:8098', weight => '0.8'}
-                    ]
-                );
+        default 'http://127.0.0.1:8098'
 
-        Now, when a request is made, a node is picked at random, according
-        to weight.
+        Note that providing multiple hosts is now deprecated.
+
+    port
+        Port of the PBC interface.
+
+    transport
+        Used to select the PB protocol by passing in 'PBC'
 
     prefix
         Interface prefix (default 'riak')
@@ -62,15 +63,17 @@ DESCRIPTION
     client_id
         client_id for this client
 
-    ua_timeout
+    ua_timeout (REST only)
         timeout for LWP::UserAgent in seconds, defaults to 3.
 
-METHODS
-  http_request
-    Returns the HTTP::Request object from the last request
+    disable_return_body (REST only)
+        Disable returning of object content in response in a store
+        operation.
 
-  http_response
-    Returns a HTTP::Response object from the last request
+        If set to true and the object has siblings these will not be
+        available without an additional fetch.
+
+        This will become the default behaviour in 0.17
 
 METHODS
   bucket
@@ -85,6 +88,9 @@ METHODS
         }
 
     Check if the Riak server for this client is alive
+
+  all_buckets
+    List all buckets, requires Riak 0.14+ or PBC connection.
 
   add
         my $map_reduce = $client->add('bucket_name', 'key');
@@ -106,11 +112,17 @@ METHODS
 
     Start assembling a Map/Reduce operation
 
+  server_info (PBC only)
+        $client->server_info->{server_version};
+
+  stats (REST only)
+        say Dumper $client->stats;
+
   SEE ALSO
     Net::Riak::MapReduce
 
 AUTHOR
-    franck cuny <franck@lumberjaph.net>
+    franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2011 by linkfluence.
@@ -122,9 +134,15 @@ POD ERRORS
     Hey! The above document had some coding errors, which are explained
     below:
 
-    Around line 126:
+    Around line 100:
         '=item' outside of any '=over'
 
-    Around line 130:
-        You forgot a '=back' before '=head1'
+    Around line 106:
+        '=item' outside of any '=over'
+
+    Around line 112:
+        '=item' outside of any '=over'
+
+    Around line 138:
+        '=item' outside of any '=over'
 

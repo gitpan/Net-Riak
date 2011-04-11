@@ -5,7 +5,7 @@ use Test::More;
 use Net::Riak;
 use HTTP::Response;
 
-my $client = Net::Riak::Client->new;
+my $client = Net::Riak::Client->with_traits('Net::Riak::Transport::REST')->new();
 ok my $bucket = Net::Riak::Bucket->new(name => 'bar', client => $client),
   'bucket created';
 

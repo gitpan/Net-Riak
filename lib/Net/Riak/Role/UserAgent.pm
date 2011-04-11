@@ -1,6 +1,6 @@
 package Net::Riak::Role::UserAgent;
 BEGIN {
-  $Net::Riak::Role::UserAgent::VERSION = '0.14';
+  $Net::Riak::Role::UserAgent::VERSION = '0.15';
 }
 
 # ABSTRACT: useragent for Net::Riak
@@ -12,6 +12,12 @@ use LWP::ConnCache;
 our $CONN_CACHE;
 
 sub connection_cache { $CONN_CACHE ||= LWP::ConnCache->new }
+
+has ua_timeout => (
+    is  => 'rw',
+    isa => 'Int',
+    default => 120
+);
 
 has useragent => (
     is      => 'rw',
@@ -27,7 +33,8 @@ has useragent => (
         @LWP::Protocol::http::EXTRA_SOCK_OPTS = %opts;
 
         my $ua = LWP::UserAgent->new(
-            timeout => $self->ua_timeout
+            timeout => $self->ua_timeout,
+            keep_alive => 1,
         );
 
         $ua->conn_cache(__PACKAGE__->connection_cache);
@@ -47,11 +54,11 @@ Net::Riak::Role::UserAgent - useragent for Net::Riak
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 AUTHOR
 
-franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

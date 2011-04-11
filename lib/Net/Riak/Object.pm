@@ -1,28 +1,30 @@
 package Net::Riak::Object;
 BEGIN {
-  $Net::Riak::Object::VERSION = '0.14';
+  $Net::Riak::Object::VERSION = '0.15';
 }
 
 # ABSTRACT: holds meta information about a Riak object
 
-use Carp;
-use JSON;
 use Moose;
 use Scalar::Util;
 use Net::Riak::Link;
 
 with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
 with 'Net::Riak::Role::Base' => {classes =>
-      [{name => 'bucket', required => 1}, {name => 'client', required => 1}]};
-
+      [{name => 'bucket', required => 1}]};#, {name => 'client', required => 1}]};
+use Net::Riak::Types Client => {-as => 'Client_T'};
+has client => (
+    is       => 'rw',
+    isa      => Client_T,
+    required => 1,
+);
 has key => (is => 'rw', isa => 'Str', required => 0);
-has status       => (is => 'rw', isa => 'Int');
 has exists       => (is => 'rw', isa => 'Bool', default => 0,);
 has data         => (is => 'rw', isa => 'Any', clearer => '_clear_data');
-has vclock       => (is => 'rw', isa => 'Str', predicate => 'has_vclock',);
+has vclock       => (is => 'rw', isa => 'Str', predicate => 'has_vclock');
+has vtag          => (is => 'rw', isa => 'Str');
 has content_type => (is => 'rw', isa => 'Str', default => 'application/json');
-has _headers     => (is => 'rw', isa => 'HTTP::Response',);
-has _jsonize     => (is => 'rw', isa => 'Bool', lazy => 1, default => 1,);
+has _jsonize     => (is => 'rw', isa => 'Bool', lazy => 1, default => 1);
 has links => (
     traits     => ['Array'],
     is         => 'rw',
@@ -34,6 +36,7 @@ has links => (
         count_links => 'elements',
         append_link => 'push',
         has_links   => 'count',
+        all_links   => 'elements',
     },
     clearer => '_clear_links',
 );
@@ -55,62 +58,31 @@ has siblings => (
     clearer => '_clear_siblings',
 );
 
+after count_links => sub {
+    warn "DEPRECATED: count_links method will be removed in the 0.17 release, please use has_links.";
+};
+
 sub store {
     my ($self, $w, $dw) = @_;
 
     $w  ||= $self->w;
     $dw ||= $self->dw;
 
-    my $params = {returnbody => 'true', w => $w, dw => $dw};
-    my $path   = [$self->client->prefix, $self->bucket->name];
-    my $method = 'POST';
-    if (defined $self->key) {
-      push @$path, $self->key;
-      $method = 'PUT';
-    } 
-
-    my $request = $self->client->new_request($method, $path, $params);
-
-    $request->header('X-Riak-ClientID' => $self->client->client_id);
-    $request->header('Content-Type'    => $self->content_type);
-
-    if ($self->has_vclock) {
-        $request->header('X-Riak-Vclock' => $self->vclock);
-    }
-
-    if ($self->has_links) {
-        $request->header('link' => $self->_links_to_header);
-    }
-
-    if (ref $self->data && $self->content_type eq 'application/json') {
-        $request->content(JSON::encode_json($self->data));
-    }
-    else {
-        $request->content($self->data);
-    }
-
-    my $response = $self->client->send_request($request);
-    $self->populate($response, [200, 201, 204, 300]);
-    $self;
+    $self->client->store_object($w, $dw, $self);
 }
 
-sub _links_to_header {
-    my $self = shift;
-    join(', ', map { $_->to_link_header($self->client) } $self->links);
-}
+sub status {
+    my ($self) = @_;
+    warn "DEPRECATED: status method will be removed in the 0.17 release, please use ->client->status.";
+    $self->client->status;
+}   
 
 sub load {
     my $self = shift;
 
     my $params = {r => $self->r};
 
-    my $request =
-      $self->client->new_request('GET',
-        [$self->client->prefix, $self->bucket->name, $self->key], $params);
-
-    my $response = $self->client->send_request($request);
-    $self->populate($response, [200, 300, 404]);
-    $self;
+    $self->client->load_object($params, $self);
 }
 
 sub delete {
@@ -119,13 +91,7 @@ sub delete {
     $dw ||= $self->bucket->dw;
     my $params = {dw => $dw};
 
-    my $request =
-      $self->client->new_request('DELETE',
-        [$self->client->prefix, $self->bucket->name, $self->key], $params);
-
-    my $response = $self->client->send_request($request);
-    $self->populate($response, [204, 404]);
-    $self;
+    $self->client->delete_object($params, $self);
 }
 
 sub clear {
@@ -136,103 +102,16 @@ sub clear {
     $self;
 }
 
-sub populate {
-    my ($self, $http_response, $expected) = @_;
-
-    $self->clear;
-
-    return if (!$http_response);
-
-    my $status = $http_response->code;
-    $self->_headers($http_response);
-    $self->status($status);
-
-    $self->data($http_response->content);
-
-    if (!grep { $status == $_ } @$expected) {
-        confess "Expected status "
-          . (join(', ', @$expected))
-          . ", received $status"
-    }
-
-    if ($status == 404) {
-        $self->clear;
-        return;
-    }
-
-    $self->exists(1);
-
-    if ($http_response->header('link')) {
-        $self->_populate_links($http_response->header('link'));
-    }
-
-    if ($status == 300) {
-        my @siblings = split("\n", $self->data);
-        shift @siblings;
-        $self->siblings(\@siblings);
-    }
-    
-    if ($status == 201) {
-        my $location = $http_response->header('location');
-        my ($key)    = ($location =~ m!/([^/]+)$!);
-        $self->key($key);
-    } 
-    
-
-    if ($status == 200 || $status == 201) {
-        $self->content_type($http_response->content_type)
-            if $http_response->content_type;
-        $self->data(JSON::decode_json($self->data))
-            if $self->content_type eq 'application/json';
-        $self->vclock($http_response->header('X-Riak-Vclock'));
-    }
-}
-
-sub _populate_links {
-    my ($self, $links) = @_;
-
-    for my $link (split(',', $links)) {
-        if ($link
-            =~ /\<\/([^\/]+)\/([^\/]+)\/([^\/]+)\>; ?riaktag=\"([^\']+)\"/)
-        {
-            my $bucket = $2;
-            my $key    = $3;
-            my $tag    = $4;
-            my $l      = Net::Riak::Link->new(
-                bucket => Net::Riak::Bucket->new(
-                    name   => $bucket,
-                    client => $self->client
-                ),
-                key => $key,
-                tag => $tag
-            );
-            $self->add_link($l);
-        }
-    }
-}
-
 sub sibling {
     my ($self, $id, $r) = @_;
     $r ||= $self->bucket->r;
 
     my $vtag = $self->get_sibling($id);
-    my $params = {r => $r, vtag => $vtag};
 
-    my $request =
-      $self->client->new_request('GET',
-        [$self->client->prefix, $self->bucket->name, $self->key], $params);
-    my $response = $self->client->send_request($request);
-
-    my $obj = Net::Riak::Object->new(
-        client => $self->client,
-        bucket => $self->bucket,
-        key    => $self->key
+    return $self->client->retrieve_sibling(
+        $self, {r => $r, vtag => $vtag}
     );
-    $obj->_jsonize($self->_jsonize);
-    $obj->populate($response, [200]);
-    $obj;
 }
-
 
 sub _build_link {
     my ($self,$obj,$tag) = @_;
@@ -310,7 +189,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -346,10 +225,6 @@ Get or set the data stored in this object.
 
 =item B<content_type>
 
-=item B<status>
-
-Get the HTTP status from the last operation on this object.
-
 =item B<links>
 
 Get an array of L<Net::Riak::Link> objects
@@ -368,7 +243,11 @@ Return an array of Siblings
 
 =over 4
 
-=item count_links
+=item all_links
+
+Return the number of links
+
+=item has_links
 
 Return the number of links
 
@@ -454,7 +333,7 @@ Return true if this object has siblings
 
 Return true if this object has no siblings
 
-=item populate
+=item populate_object
 
 Given the output of RiakUtils.http_request and a list of statuses, populate the object. Only for use by the Riak client library.
 
@@ -490,7 +369,7 @@ Start assembling a Map/Reduce operation
 
 =head1 AUTHOR
 
-franck cuny <franck@lumberjaph.net>
+franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
