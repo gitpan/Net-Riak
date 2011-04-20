@@ -88,7 +88,7 @@ sub all_buckets {
     die "Failed to fetch buckets.. are you running riak 0.14+?" 
         unless $response->is_success;
     my $resp = JSON::decode_json($response->content);
-    return @{$resp->{buckets}};
+    return ref ($resp->{buckets}) eq 'ARRAY' ? @{$resp->{buckets}} : ();
 }
 
 sub server_info { die "->server_info not supported by the REST interface" }

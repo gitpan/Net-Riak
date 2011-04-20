@@ -26,54 +26,49 @@ SYNOPSIS
         $obj = $bucket->get('new_post');
         say "title for ".$obj->key." is ".$obj->data->{title};
 
-        # When using the REST client you may access the last request and response.
-
-        my $req = $client->http_request; # last request
-        $client->http_response # last response
-
 DESCRIPTION
   ATTRIBUTES
     host
-        REST: The URL of the node
+      REST: The URL of the node
 
-        PBC: The hostname of the node
+      PBC: The hostname of the node
 
-        default 'http://127.0.0.1:8098'
+      default 'http://127.0.0.1:8098'
 
-        Note that providing multiple hosts is now deprecated.
+      Note that providing multiple hosts is now deprecated.
 
     port
-        Port of the PBC interface.
+      Port of the PBC interface.
 
     transport
-        Used to select the PB protocol by passing in 'PBC'
+      Used to select the PB protocol by passing in 'PBC'
 
     prefix
-        Interface prefix (default 'riak')
+      Interface prefix (default 'riak')
 
     mapred_prefix
-        MapReduce prefix (default 'mapred')
+      MapReduce prefix (default 'mapred')
 
-    r   R value setting for this client (default 2)
+    r R value setting for this client (default 2)
 
-    w   W value setting for this client (default 2)
+    w W value setting for this client (default 2)
 
-    dw  DW value setting for this client (default 2)
+    dw
+      DW value setting for this client (default 2)
 
     client_id
-        client_id for this client
+      client_id for this client
 
     ua_timeout (REST only)
-        timeout for LWP::UserAgent in seconds, defaults to 3.
+      timeout for LWP::UserAgent in seconds, defaults to 3.
 
     disable_return_body (REST only)
-        Disable returning of object content in response in a store
-        operation.
+      Disable returning of object content in response in a store operation.
 
-        If set to true and the object has siblings these will not be
-        available without an additional fetch.
+      If set to true and the object has siblings these will not be available
+      without an additional fetch.
 
-        This will become the default behaviour in 0.17
+      This will become the default behaviour in 0.17
 
 METHODS
   bucket
@@ -121,6 +116,10 @@ METHODS
   SEE ALSO
     Net::Riak::MapReduce
 
+    Net::Riak::Object
+
+    Net::Riak::Bucket
+
 AUTHOR
     franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
@@ -129,20 +128,4 @@ COPYRIGHT AND LICENSE
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
-
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 100:
-        '=item' outside of any '=over'
-
-    Around line 106:
-        '=item' outside of any '=over'
-
-    Around line 112:
-        '=item' outside of any '=over'
-
-    Around line 138:
-        '=item' outside of any '=over'
 

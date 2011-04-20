@@ -25,7 +25,7 @@ sub test_riak_rest (&) {
     
     if ($ENV{RIAK_REST_HOST}) {
         diag "Running for REST";
-        my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST});
+        my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST}, r => 1, w => 1, dw => 1);
         isa_ok $client, 'Net::Riak';
         is $client->is_alive, 1, 'connected';
         run_test_case($test_case, $client, 'REST');
@@ -47,6 +47,9 @@ sub test_riak_pbc (&) {
             transport => 'PBC',
             host  => $host,
             port  => $port,
+            r     => 1,
+            w     => 1,
+            dw    => 1,
         );
 
         isa_ok $client, 'Net::Riak';
@@ -68,6 +71,9 @@ sub new_riak_client {
             transport => 'PBC',
             host  => $host,
             port  => $port,
+            r     => 1,
+            w     => 1,
+            dw    => 1,
         );
     }
     elsif ($proto eq 'REST') {

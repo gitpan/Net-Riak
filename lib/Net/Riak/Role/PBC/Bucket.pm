@@ -23,19 +23,24 @@ sub set_properties {
 }
 
 sub get_keys {
-    my ( $self, $name ) = @_;
+    my ( $self, $name, $params) = @_;
     my $keys = [];
 
     my $res = $self->send_message(
         ListKeysReq => { bucket => $name, },
         sub {
             if ( defined $_[0]->keys ) {
-                push @$keys, @{ $_[0]->keys };
+                if ($params->{cb}) {
+                    $params->{cb}->($_) for @{ $_[0]->keys };
+                } 
+                else {
+                    push @$keys, @{ $_[0]->keys };
+                }
             }
         }
     );
 
-    return @$keys;
+    return $params->{cb} ? undef : $keys; 
 }
 
 

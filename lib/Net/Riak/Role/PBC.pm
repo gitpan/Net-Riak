@@ -67,7 +67,7 @@ sub connect {
 sub all_buckets {
     my $self = shift;
     my $resp = $self->send_message('ListBucketsReq');
-    return @{$resp->buckets};  
+    return ref ($resp->buckets) eq 'ARRAY' ? @{$resp->buckets} : ();
 }
 
 sub server_info {

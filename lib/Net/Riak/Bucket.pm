@@ -64,12 +64,12 @@ sub get {
 }
 
 sub delete_object {
-    my ($self, $key) = @_;
+    my ($self, $key, $dw) = @_;
     Net::Riak::Object->new(
         client => $self->client,
         bucket => $self,
         key    => $key
-    )->delete;
+    )->delete($dw);
 }
 
 sub set_property {
@@ -132,7 +132,7 @@ version 0.15
     my $obj2 = $bucket->new_object('foo2', {...});
     $object->store;
 
-    $bucket->delete_object($key);
+    $bucket->delete_object($key, 3); # optional w val
 
 =head1 DESCRIPTION
 

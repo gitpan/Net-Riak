@@ -15,10 +15,6 @@ test_riak {
         my $bucket = $client->bucket($bucket_name);
         ok $bucket->allow_multiples, 'bucket multiples set to 1';
     }
-};
-
-=cut
-    exit;
 
     {
         my $obj = $bucket->get('foo');
@@ -27,7 +23,7 @@ test_riak {
     }
    
     for(1..5) {
-        my $client = new_riak_client();
+        my $client = new_riak_client($proto);
         my $bucket = $client->bucket($bucket_name);
         my $obj = $bucket->new_object('foo', [$_]);
         $obj->store;

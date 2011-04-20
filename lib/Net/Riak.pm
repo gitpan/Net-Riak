@@ -74,16 +74,11 @@ version 0.15
     $obj = $bucket->get('new_post');
     say "title for ".$obj->key." is ".$obj->data->{title};
 
-    # When using the REST client you may access the last request and response.
-
-    my $req = $client->http_request; # last request
-    $client->http_response # last response
-
 =head1 DESCRIPTION
 
 =head2 ATTRIBUTES
 
-=over 4
+=over 2
 
 =item B<host>
 
@@ -95,19 +90,13 @@ default 'http://127.0.0.1:8098'
 
 Note that providing multiple hosts is now deprecated.
 
-=back
-
 =item B<port>
 
 Port of the PBC interface.
 
-=back
-
 =item B<transport>
 
 Used to select the PB protocol by passing in 'PBC'
-
-=back
 
 =item B<prefix>
 
@@ -132,8 +121,6 @@ DW value setting for this client (default 2)
 =item B<client_id>
 
 client_id for this client
-
-=back
 
 =item B<ua_timeout (REST only)>
 
@@ -204,6 +191,10 @@ Start assembling a Map/Reduce operation
 =head2 SEE ALSO
 
 Net::Riak::MapReduce
+
+Net::Riak::Object
+
+Net::Riak::Bucket
 
 =head1 AUTHOR
 
