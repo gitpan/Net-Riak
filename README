@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.15
+    version 0.1501
 
 SYNOPSIS
         # REST interface
@@ -113,7 +113,7 @@ METHODS
   stats (REST only)
         say Dumper $client->stats;
 
-  SEE ALSO
+SEE ALSO
     Net::Riak::MapReduce
 
     Net::Riak::Object

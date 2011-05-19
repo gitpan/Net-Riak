@@ -1,6 +1,6 @@
 package Net::Riak;
 BEGIN {
-  $Net::Riak::VERSION = '0.15';
+  $Net::Riak::VERSION = '0.1501';
 }
 
 # ABSTRACT: Interface to Riak
@@ -49,7 +49,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.15
+version 0.1501
 
 =head1 SYNOPSIS
 
@@ -188,13 +188,13 @@ Start assembling a Map/Reduce operation
 
     say Dumper $client->stats;
 
-=head2 SEE ALSO
+=head1 SEE ALSO
 
-Net::Riak::MapReduce
+L<Net::Riak::MapReduce>
 
-Net::Riak::Object
+L<Net::Riak::Object>
 
-Net::Riak::Bucket
+L<Net::Riak::Bucket>
 
 =head1 AUTHOR
 

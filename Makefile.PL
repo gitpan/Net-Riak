@@ -44,7 +44,7 @@ my %WriteMakefileArgs = (
     'URI' => '0',
     'bytes' => '0'
   },
-  'VERSION' => '0.15',
+  'VERSION' => '0.1501',
   'test' => {
     'TESTS' => 't/*.t t/pbc/*.t t/rest/*.t'
   }

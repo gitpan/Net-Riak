@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 BEGIN {
-  $Net::Riak::MapReduce::VERSION = '0.15';
+  $Net::Riak::MapReduce::VERSION = '0.1501';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -94,6 +94,7 @@ sub add_bucket {
     my ($self, $bucket) = @_;
     $self->input_mode('bucket');
     $self->inputs_bucket($bucket);
+    $self;
 }
 
 sub link {
@@ -198,7 +199,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.15
+version 0.1501
 
 =head1 SYNOPSIS
 

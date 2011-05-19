@@ -1,3 +1,7 @@
+0.1501 Thu May 19 12:07:51 BST 2011
+    - fix pod error in Net/Riak.pm
+    - fix GH-12 in Map/Reduce operations (franck cuny)
+
 0.15 Wed 20 Apr 2011 14:52:22 BST 
     - fixed link encoding (Simon Wistow)
     - added stats method for REST

@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC::Message;
 BEGIN {
-  $Net::Riak::Role::PBC::Message::VERSION = '0.15';
+  $Net::Riak::Role::PBC::Message::VERSION = '0.1501';
 }
 
 use Moose::Role;
@@ -32,7 +32,7 @@ Net::Riak::Role::PBC::Message
 
 =head1 VERSION
 
-version 0.15
+version 0.1501
 
 =head1 AUTHOR
 
