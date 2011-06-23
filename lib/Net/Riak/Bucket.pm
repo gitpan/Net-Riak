@@ -1,6 +1,6 @@
 package Net::Riak::Bucket;
 BEGIN {
-  $Net::Riak::Bucket::VERSION = '0.1501';
+  $Net::Riak::Bucket::VERSION = '0.1502';
 }
 use Moose;
 use Net::Riak::Object;
@@ -118,7 +118,7 @@ Net::Riak::Bucket
 
 =head1 VERSION
 
-version 0.1501
+version 0.1502
 
 =head1 SYNOPSIS
 

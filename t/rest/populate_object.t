@@ -25,7 +25,7 @@ eval {
     $client->populate_object($object,  $response, [200]);
 };
 
-like $@, qr/Expected status 200, received 400/, "can't populate with a 400";
+like $@, qr/Expected status 200, received: 400/, "can't populate with a 400";
 
 my $value = {value => 1};
 

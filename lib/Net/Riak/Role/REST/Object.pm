@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Object;
 BEGIN {
-  $Net::Riak::Role::REST::Object::VERSION = '0.1501';
+  $Net::Riak::Role::REST::Object::VERSION = '0.1502';
 }
 
 use Moose::Role;
@@ -92,7 +92,7 @@ sub populate_object {
     if (!grep { $status == $_ } @$expected) {
         confess "Expected status "
           . (join(', ', @$expected))
-          . ", received $status"
+          . ", received: ".$http_response->status_line
     }
 
     if ($status == 404) {
@@ -165,7 +165,7 @@ Net::Riak::Role::REST::Object
 
 =head1 VERSION
 
-version 0.1501
+version 0.1502
 
 =over 3
 

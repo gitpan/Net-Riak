@@ -1,6 +1,6 @@
 package Net::Riak::Transport::REST;
 BEGIN {
-  $Net::Riak::Transport::REST::VERSION = '0.1501';
+  $Net::Riak::Transport::REST::VERSION = '0.1502';
 }
 
 use Moose::Role;
@@ -22,7 +22,7 @@ Net::Riak::Transport::REST
 
 =head1 VERSION
 
-version 0.1501
+version 0.1502
 
 =head1 AUTHOR
 

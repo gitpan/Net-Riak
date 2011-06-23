@@ -1,6 +1,6 @@
 package Net::Riak::Transport::PBC::Code;
 BEGIN {
-  $Net::Riak::Transport::PBC::Code::VERSION = '0.1501';
+  $Net::Riak::Transport::PBC::Code::VERSION = '0.1502';
 }
 use strict;
 use warnings;
@@ -101,7 +101,7 @@ Net::Riak::Transport::PBC::Code
 
 =head1 VERSION
 
-version 0.1501
+version 0.1502
 
 =head1 AUTHOR
 

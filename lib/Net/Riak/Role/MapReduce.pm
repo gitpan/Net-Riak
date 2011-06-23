@@ -1,6 +1,6 @@
 package Net::Riak::Role::MapReduce;
 BEGIN {
-  $Net::Riak::Role::MapReduce::VERSION = '0.1501';
+  $Net::Riak::Role::MapReduce::VERSION = '0.1502';
 }
 
 use Moose::Role;
@@ -45,7 +45,7 @@ Net::Riak::Role::MapReduce
 
 =head1 VERSION
 
-version 0.1501
+version 0.1502
 
 =head1 AUTHOR
 

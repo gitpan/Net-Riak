@@ -1,3 +1,6 @@
+0.1502 Thu Jun 23 15:39:10 BST 2011
+    - added status line to REST response (Robin Edwards)
+
 0.1501 Thu May 19 12:07:51 BST 2011
     - fix pod error in Net/Riak.pm
     - fix GH-12 in Map/Reduce operations (franck cuny)
