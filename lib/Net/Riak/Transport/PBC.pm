@@ -1,6 +1,6 @@
 package Net::Riak::Transport::PBC;
-BEGIN {
-  $Net::Riak::Transport::PBC::VERSION = '0.1502';
+{
+  $Net::Riak::Transport::PBC::VERSION = '0.1600';
 }
 
 use Moose::Role;
@@ -20,7 +20,7 @@ Net::Riak::Transport::PBC
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

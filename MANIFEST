@@ -31,8 +31,10 @@ lib/Net/Riak/Role/REST/Bucket.pm
 lib/Net/Riak/Role/REST/Link.pm
 lib/Net/Riak/Role/REST/MapReduce.pm
 lib/Net/Riak/Role/REST/Object.pm
+lib/Net/Riak/Role/REST/Search.pm
 lib/Net/Riak/Role/Replica.pm
 lib/Net/Riak/Role/UserAgent.pm
+lib/Net/Riak/Search.pm
 lib/Net/Riak/Transport/PBC.pm
 lib/Net/Riak/Transport/PBC/Code.pm
 lib/Net/Riak/Transport/PBC/Message.pm
@@ -51,6 +53,7 @@ t/06_links.t
 t/07_map_reduce.t
 t/10_list_buckets.t
 t/11_get_keys.t
+t/20_search.t
 t/90_bug_links.t
 t/client.t
 t/hosts.t

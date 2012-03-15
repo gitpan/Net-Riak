@@ -1,6 +1,6 @@
 package Net::Riak::Role::Hosts;
-BEGIN {
-  $Net::Riak::Role::Hosts::VERSION = '0.1502';
+{
+  $Net::Riak::Role::Hosts::VERSION = '0.1600';
 }
 
 use Moose::Role;
@@ -37,7 +37,7 @@ Net::Riak::Role::Hosts
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

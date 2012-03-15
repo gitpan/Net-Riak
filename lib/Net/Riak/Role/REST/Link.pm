@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Link;
-BEGIN {
-  $Net::Riak::Role::REST::Link::VERSION = '0.1502';
+{
+  $Net::Riak::Role::REST::Link::VERSION = '0.1600';
 }
 use Moose::Role;
 use Net::Riak::Link;
@@ -63,7 +63,7 @@ Net::Riak::Role::REST::Link
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

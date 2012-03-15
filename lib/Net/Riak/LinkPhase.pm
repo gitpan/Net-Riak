@@ -1,6 +1,6 @@
 package Net::Riak::LinkPhase;
-BEGIN {
-  $Net::Riak::LinkPhase::VERSION = '0.1502';
+{
+  $Net::Riak::LinkPhase::VERSION = '0.1600';
 }
 
 use Moose;
@@ -31,7 +31,7 @@ Net::Riak::LinkPhase
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

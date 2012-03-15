@@ -2,14 +2,13 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.1502
+    version 0.1600
 
 SYNOPSIS
         # REST interface
         my $client = Net::Riak->new(
             host => 'http://10.0.0.40:8098',
             ua_timeout => 900,
-            disable_return_body => 1
         );
 
         # Or PBC interface.
@@ -25,6 +24,14 @@ SYNOPSIS
 
         $obj = $bucket->get('new_post');
         say "title for ".$obj->key." is ".$obj->data->{title};
+
+        # Indexing and searching (REST interface)
+        $client->setup_indexing("bucket_name");
+        ...adding documents to riak...
+        my $response = $client->search(
+            index => 'bucket_name',
+            q     => 'field:value'
+        );
 
 DESCRIPTION
   ATTRIBUTES
@@ -112,6 +119,18 @@ METHODS
 
   stats (REST only)
         say Dumper $client->stats;
+
+  search (REST only)
+        $client->search( index => 'bucket_name', q => 'field:value' );
+
+    Makes a query to the index (see Net::Riak::Search for more details on
+    parameters)
+
+  setup_indexing (REST only)
+        $client->setup_indexing('bucket_name');
+
+    Define precommit hook in order to enable indexing documents written into
+    the given bucket
 
 SEE ALSO
     Net::Riak::MapReduce

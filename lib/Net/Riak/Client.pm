@@ -1,6 +1,6 @@
 package Net::Riak::Client;
-BEGIN {
-  $Net::Riak::Client::VERSION = '0.1502';
+{
+  $Net::Riak::Client::VERSION = '0.1600';
 }
 
 use Moose;
@@ -17,6 +17,11 @@ has mapred_prefix => (
     is      => 'rw',
     isa     => 'Str',
     default => 'mapred'
+);
+has search_prefix => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'solr'
 );
 has [qw/r w dw/] => (
     is      => 'rw',
@@ -45,7 +50,7 @@ Net::Riak::Client
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

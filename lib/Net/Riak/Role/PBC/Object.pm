@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC::Object;
-BEGIN {
-  $Net::Riak::Role::PBC::Object::VERSION = '0.1502';
+{
+  $Net::Riak::Role::PBC::Object::VERSION = '0.1600';
 }
 
 use JSON;
@@ -144,7 +144,7 @@ Net::Riak::Role::PBC::Object
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

@@ -1,3 +1,9 @@
+0.1600 Thu Mar 15 15:30:47 GMT 2012
+    - catch errors in reading sockets (Damien Krotkine)
+    - added Riak search (Germain Maurice)
+    - fixed package name (David Hull)
+    - various documentation updates
+
 0.1502 Thu Jun 23 15:39:10 BST 2011
     - added status line to REST response (Robin Edwards)
 

@@ -1,6 +1,6 @@
 package Net::Riak::Role::UserAgent;
-BEGIN {
-  $Net::Riak::Role::UserAgent::VERSION = '0.1502';
+{
+  $Net::Riak::Role::UserAgent::VERSION = '0.1600';
 }
 
 # ABSTRACT: useragent for Net::Riak
@@ -54,7 +54,7 @@ Net::Riak::Role::UserAgent - useragent for Net::Riak
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

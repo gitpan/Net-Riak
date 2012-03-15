@@ -1,6 +1,6 @@
 package Net::Riak;
-BEGIN {
-  $Net::Riak::VERSION = '0.1502';
+{
+  $Net::Riak::VERSION = '0.1600';
 }
 
 # ABSTRACT: Interface to Riak
@@ -17,7 +17,7 @@ has client => (
     is       => 'rw',
     isa      => Client_T,
     required => 1,
-    handles  => [qw/is_alive all_buckets server_info stats/]
+    handles  => [qw/is_alive all_buckets server_info stats search setup_indexing/]
 );
 
 sub BUILDARGS {
@@ -49,7 +49,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 SYNOPSIS
 
@@ -57,7 +57,6 @@ version 0.1502
     my $client = Net::Riak->new(
         host => 'http://10.0.0.40:8098',
         ua_timeout => 900,
-        disable_return_body => 1
     );
 
     # Or PBC interface.
@@ -73,6 +72,14 @@ version 0.1502
 
     $obj = $bucket->get('new_post');
     say "title for ".$obj->key." is ".$obj->data->{title};
+
+    # Indexing and searching (REST interface)
+    $client->setup_indexing("bucket_name");
+    ...adding documents to riak...
+    my $response = $client->search(
+        index => 'bucket_name',
+        q     => 'field:value'
+    );
 
 =head1 DESCRIPTION
 
@@ -130,9 +137,9 @@ timeout for L<LWP::UserAgent> in seconds, defaults to 3.
 
 Disable returning of object content in response in a store operation.
 
-If set  to true and the object has siblings these will not be available without an additional fetch.
+If set to true and the object has siblings these will not be available without an additional fetch.
 
-This will become the default behaviour in 0.17 
+This will become the default behaviour in 0.17
 
 =back
 
@@ -187,6 +194,18 @@ Start assembling a Map/Reduce operation
 =head2 stats (REST only)
 
     say Dumper $client->stats;
+
+=head2 search (REST only)
+
+    $client->search( index => 'bucket_name', q => 'field:value' );
+
+Makes a query to the index (see L<Net::Riak::Search> for more details on parameters)
+
+=head2 setup_indexing (REST only)
+
+    $client->setup_indexing('bucket_name');
+
+Define precommit hook in order to enable indexing documents written into the given bucket
 
 =head1 SEE ALSO
 

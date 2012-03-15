@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST;
-BEGIN {
-  $Net::Riak::Role::REST::VERSION = '0.1502';
+{
+  $Net::Riak::Role::REST::VERSION = '0.1600';
 }
 
 # ABSTRACT: role for REST operations
@@ -15,6 +15,7 @@ with qw/Net::Riak::Role::REST::Bucket
     Net::Riak::Role::REST::Object 
     Net::Riak::Role::REST::Link
     Net::Riak::Role::REST::MapReduce
+    Net::Riak::Role::REST::Search
     /;
 
 has http_request => (
@@ -111,7 +112,7 @@ Net::Riak::Role::REST - role for REST operations
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

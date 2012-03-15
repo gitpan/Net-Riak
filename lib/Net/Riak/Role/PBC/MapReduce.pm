@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC::MapReduce;
-BEGIN {
-  $Net::Riak::Role::PBC::MapReduce::VERSION = '0.1502';
+{
+  $Net::Riak::Role::PBC::MapReduce::VERSION = '0.1600';
 }
 use Moose::Role;
 use JSON;
@@ -48,7 +48,7 @@ Net::Riak::Role::PBC::MapReduce
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

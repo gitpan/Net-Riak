@@ -1,6 +1,6 @@
-package Net::Riak::Transport::PBC;
-BEGIN {
-  $Net::Riak::Transport::PBC::VERSION = '0.1502';
+package Net::Riak::Transport::PBC::Transport;
+{
+  $Net::Riak::Transport::PBC::Transport::VERSION = '0.1600';
 }
 
 ##
@@ -490,11 +490,11 @@ __END__
 
 =head1 NAME
 
-Net::Riak::Transport::PBC
+Net::Riak::Transport::PBC::Transport
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =head1 AUTHOR
 

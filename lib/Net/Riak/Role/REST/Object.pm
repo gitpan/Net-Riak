@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Object;
-BEGIN {
-  $Net::Riak::Role::REST::Object::VERSION = '0.1502';
+{
+  $Net::Riak::Role::REST::Object::VERSION = '0.1600';
 }
 
 use Moose::Role;
@@ -165,7 +165,7 @@ Net::Riak::Role::REST::Object
 
 =head1 VERSION
 
-version 0.1502
+version 0.1600
 
 =over 3
 
