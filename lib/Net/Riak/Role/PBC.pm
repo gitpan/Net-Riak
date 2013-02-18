@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC;
 {
-  $Net::Riak::Role::PBC::VERSION = '0.1600';
+  $Net::Riak::Role::PBC::VERSION = '0.1700';
 }
 
 use Moose::Role;
@@ -40,6 +40,12 @@ has socket => (
     predicate => 'has_socket',
 );
 
+has timeout => (
+    is => 'ro',
+    isa => Int,
+    default => 30,
+);
+
 sub is_alive {
     my $self = shift;
     return $self->send_message('PingReq');
@@ -59,7 +65,7 @@ sub connect {
             PeerAddr => $self->host,
             PeerPort => $self->port,
             Proto    => 'tcp',
-            Timeout  => 30,
+            Timeout  => $self->timeout,
         )
     );
 }
@@ -81,6 +87,7 @@ sub stats { die "->stats is only avaliable through the REST interface" }
 1; 
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -89,7 +96,7 @@ Net::Riak::Role::PBC
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =head1 AUTHOR
 
@@ -103,4 +110,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 {
-  $Net::Riak::MapReduce::VERSION = '0.1600';
+  $Net::Riak::MapReduce::VERSION = '0.1700';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -56,7 +56,8 @@ sub add {
     if (ref $arg eq 'ARRAY') {
         do{
             $self->add_input($arg);
-        }while(my $arg = shift @_);
+        }while($arg = shift @_);
+
         return $self;
     }
 
@@ -189,8 +190,8 @@ sub run {
 
 1;
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -199,7 +200,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =head1 SYNOPSIS
 
@@ -352,4 +353,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Net::Riak::LinkPhase;
 {
-  $Net::Riak::LinkPhase::VERSION = '0.1600';
+  $Net::Riak::LinkPhase::VERSION = '0.1700';
 }
 
 use Moose;
@@ -23,6 +23,7 @@ sub to_array {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -31,7 +32,7 @@ Net::Riak::LinkPhase
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =head1 AUTHOR
 
@@ -45,4 +46,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

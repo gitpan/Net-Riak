@@ -58,6 +58,7 @@ t/90_bug_links.t
 t/client.t
 t/hosts.t
 t/lib/Test/Riak.pm
+t/pbc.t
 t/pbc/server_info.t
 t/release-no-tabs.t
 t/release-pod-coverage.t

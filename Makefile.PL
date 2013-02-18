@@ -28,6 +28,7 @@ my %WriteMakefileArgs = (
     "Exporter" => 0,
     "Google::ProtocolBuffers" => 0,
     "IO::Socket::INET" => 0,
+    "IO::Socket::SSL" => 0,
     "JSON" => 0,
     "LWP::ConnCache" => 0,
     "LWP::UserAgent" => 0,
@@ -47,7 +48,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.1600",
+  "VERSION" => "0.1700",
   "test" => {
     "TESTS" => "t/*.t t/pbc/*.t t/rest/*.t"
   }

@@ -1,6 +1,6 @@
 package Net::Riak::Role::Base;
 {
-  $Net::Riak::Role::Base::VERSION = '0.1600';
+  $Net::Riak::Role::Base::VERSION = '0.1700';
 }
 
 use MooseX::Role::Parameterized;
@@ -29,8 +29,8 @@ role {
 
 1;
 
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -39,7 +39,7 @@ Net::Riak::Role::Base
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =head1 AUTHOR
 
@@ -53,4 +53,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

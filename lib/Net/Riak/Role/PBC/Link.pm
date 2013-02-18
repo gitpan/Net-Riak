@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC::Link;
 {
-  $Net::Riak::Role::PBC::Link::VERSION = '0.1600';
+  $Net::Riak::Role::PBC::Link::VERSION = '0.1700';
 }
 use Moose::Role;
 use Net::Riak::Link;
@@ -38,6 +38,7 @@ sub _links_for_message {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -46,7 +47,7 @@ Net::Riak::Role::PBC::Link
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =head1 AUTHOR
 
@@ -60,4 +61,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Object;
 {
-  $Net::Riak::Role::REST::Object::VERSION = '0.1600';
+  $Net::Riak::Role::REST::Object::VERSION = '0.1700';
 }
 
 use Moose::Role;
@@ -156,6 +156,7 @@ sub retrieve_sibling {
 
 1;
 
+__END__
 
 =pod
 
@@ -165,7 +166,7 @@ Net::Riak::Role::REST::Object
 
 =head1 VERSION
 
-version 0.1600
+version 0.1700
 
 =over 3
 
@@ -187,7 +188,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-
