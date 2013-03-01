@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 {
-  $Net::Riak::Object::VERSION = '0.1700';
+  $Net::Riak::Object::VERSION = '0.1701';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -13,6 +13,7 @@ with 'Net::Riak::Role::Replica' => {keys => [qw/r w dw/]};
 with 'Net::Riak::Role::Base' => {classes =>
       [{name => 'bucket', required => 1}]};
 use Net::Riak::Types Client => {-as => 'Client_T'};
+
 has client => (
     is       => 'rw',
     isa      => Client_T,
@@ -22,10 +23,12 @@ has key => (is => 'rw', isa => 'Str', required => 0);
 has exists       => (is => 'rw', isa => 'Bool', default => 0,);
 has data         => (is => 'rw', isa => 'Any', clearer => '_clear_data');
 has vclock       => (is => 'rw', isa => 'Str', predicate => 'has_vclock');
-has vtag          => (is => 'rw', isa => 'Str');
+has vtag         => (is => 'rw', isa => 'Str');
 has content_type => (is => 'rw', isa => 'Str', default => 'application/json');
-has location     => ( is => 'rw', isa => 'Str' );
+has location     => (is => 'rw', isa => 'Str');
 has _jsonize     => (is => 'rw', isa => 'Bool', lazy => 1, default => 1);
+has i2indexes    => (is => 'rw', isa => 'HashRef');
+
 has links => (
     traits     => ['Array'],
     is         => 'rw',
@@ -34,7 +37,6 @@ has links => (
     lazy       => 1,
     default    => sub { [] },
     handles    => {
-        count_links => 'elements',
         append_link => 'push',
         has_links   => 'count',
         all_links   => 'elements',
@@ -59,10 +61,6 @@ has siblings => (
     clearer => '_clear_siblings',
 );
 
-after count_links => sub {
-    warn "DEPRECATED: count_links method will be removed in the 0.17 release, please use has_links.";
-};
-
 sub store {
     my ($self, $w, $dw) = @_;
 
@@ -72,11 +70,43 @@ sub store {
     $self->client->store_object($w, $dw, $self);
 }
 
-sub status {
-    my ($self) = @_;
-    warn "DEPRECATED: status method will be removed in the 0.17 release, please use ->client->status.";
-    $self->client->status;
-}   
+sub add_index {
+    my ($self, $index, $data) = @_;
+
+    if (defined $index && defined $data) {
+        my $ref = undef;
+        $ref = $self->i2indexes
+            if (defined $self->i2indexes);
+
+        $ref->{$index} = $data
+            if (length($index) > 4 && $index =~ /^.+_bin$/ && length($data) > 0 );
+
+        $ref->{$index} = $data
+
+            if (length($index) > 4 && $index =~ /^.+_int$/ && $data =~ /^\d+$/ );
+        $self->i2indexes($ref);
+    }
+    return $self->i2indexes;
+}
+
+sub remove_index {
+    my ($self, $index, $data) = @_;
+    if (defined $index && defined $data && defined $self->i2indexes ) {
+        my $ref = $self->i2indexes;
+
+        if ($index =~ /^.+_bin$/) {
+            delete ${$ref}{$index}
+                if (defined($ref->{$index}) && $ref->{$index} eq $data);
+            $self->i2indexes($ref);
+        }
+        if ( $index =~ /^.+_int$/ ) {
+            delete(${$ref}{$index})
+                if (defined($ref->{$index}) && $ref->{$index} == $data);
+            $self->i2indexes($ref);
+        }
+    }
+    return $self->i2indexes;
+}
 
 sub load {
     my $self = shift;
@@ -190,7 +220,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =head1 SYNOPSIS
 
@@ -374,7 +404,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

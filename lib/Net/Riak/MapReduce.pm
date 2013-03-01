@@ -1,6 +1,6 @@
 package Net::Riak::MapReduce;
 {
-  $Net::Riak::MapReduce::VERSION = '0.1700';
+  $Net::Riak::MapReduce::VERSION = '0.1701';
 }
 
 # ABSTRACT: Allows you to build up and run a map/reduce operation on Riak
@@ -200,7 +200,7 @@ Net::Riak::MapReduce - Allows you to build up and run a map/reduce operation on 
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =head1 SYNOPSIS
 
@@ -347,7 +347,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

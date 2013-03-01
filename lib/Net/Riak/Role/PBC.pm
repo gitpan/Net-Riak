@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC;
 {
-  $Net::Riak::Role::PBC::VERSION = '0.1700';
+  $Net::Riak::Role::PBC::VERSION = '0.1701';
 }
 
 use Moose::Role;
@@ -96,7 +96,7 @@ Net::Riak::Role::PBC
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =head1 AUTHOR
 
@@ -104,7 +104,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

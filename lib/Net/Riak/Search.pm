@@ -29,7 +29,7 @@ Net::Riak::Search - Search interface
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =head1 SYNOPSIS
 
@@ -44,6 +44,13 @@ version 0.1700
     $object->store;
 
     $bucket->delete_object($key, 3); # optional w val
+
+    # Secondary index setup
+    my $obj3 = $bucket->new_object('foo3', {...});
+    $obj3->add_index('index', 'first');
+    $obj3->store;
+    
+    my @keys = $client->index('bucket', 'myindex_bin', 'first_value' [, 'last_value'] );
 
 =head1 DESCRIPTION
 
@@ -92,6 +99,18 @@ is the default index you want to query, if no index is provided you have to add 
 
 is the number of documents you want to be returned in the response
 
+=item add_index
+
+add secondary index to object
+
+= item remove_index
+
+remove secondary index from object
+
+=item index
+
+Find keys via secondary index.
+
 =back
 
 More parameters are available, just check at L<http://wiki.basho.com/Riak-Search---Querying.html#Querying-via-the-Solr-Interface>
@@ -102,7 +121,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Object;
 {
-  $Net::Riak::Role::REST::Object::VERSION = '0.1700';
+  $Net::Riak::Role::REST::Object::VERSION = '0.1701';
 }
 
 use Moose::Role;
@@ -14,7 +14,7 @@ sub store_object {
     $params->{returnbody} = 'false'
         if $self->disable_return_body;
 
-    
+
     my $request;
     if ( defined $object->key ) {
       $request = $self->new_request('PUT',
@@ -33,6 +33,12 @@ sub store_object {
 
     if ($object->has_links) {
         $request->header('link' => $self->_links_to_header($object));
+    }
+
+    if ($object->i2indexes) {
+        foreach (keys %{$object->i2indexes}) {
+            $request->header(':x-riak-index-' . lc($_) => $object->i2indexes->{$_});
+        }
     }
 
     if (ref $object->data && $object->content_type eq 'application/json') {
@@ -79,6 +85,7 @@ sub populate_object {
 
     return if (!$http_response);
 
+
     my $status = $http_response->code;
 
     $obj->data($http_response->content)
@@ -94,6 +101,13 @@ sub populate_object {
           . (join(', ', @$expected))
           . ", received: ".$http_response->status_line
     }
+
+    $HTTP::Headers::TRANSLATE_UNDERSCORE = 0;
+    foreach ($http_response->header_field_names) {
+        next unless /^X-Riak-Index-(.+_bin)$/ || /^X-Riak-Index-(.+_int)$/;
+        $obj->add_index(lc($1),  $http_response->header($_))
+    }
+    $HTTP::Headers::TRANSLATE_UNDERSCORE = 1;
 
     if ($status == 404) {
         $obj->clear;
@@ -112,13 +126,13 @@ sub populate_object {
         my %seen; @siblings = grep { !$seen{$_}++ } @siblings;
         $obj->siblings(\@siblings);
     }
-    
+
     if ($status == 201) {
         my $location = $http_response->header('location');
         my ($key)    = ($location =~ m!/([^/]+)$!);
         $obj->key($key);
-    } 
-    
+    }
+
 
     if ($status == 200 || $status == 201) {
         $obj->content_type($http_response->content_type)
@@ -134,12 +148,12 @@ sub retrieve_sibling {
 
     my $request = $self->new_request(
         'GET',
-        [$self->prefix, $object->bucket->name, $object->key], 
+        [$self->prefix, $object->bucket->name, $object->key],
         $params
     );
 
     my $response = $self->send_request($request);
-    
+
     my $sibling = Net::Riak::Object->new(
         client => $self,
         bucket => $object->bucket,
@@ -166,7 +180,7 @@ Net::Riak::Role::REST::Object
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =over 3
 
@@ -182,7 +196,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

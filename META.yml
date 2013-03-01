@@ -39,7 +39,7 @@ requires:
   bytes: 0
   strict: 0
   warnings: 0
-version: 0.1700
+version: 0.1701
 x_Dist_Zilla:
   perl:
     version: 5.017007

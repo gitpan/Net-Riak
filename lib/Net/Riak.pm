@@ -1,6 +1,6 @@
 package Net::Riak;
 {
-  $Net::Riak::VERSION = '0.1700';
+  $Net::Riak::VERSION = '0.1701';
 }
 
 # ABSTRACT: Interface to Riak
@@ -17,7 +17,7 @@ has client => (
     is       => 'rw',
     isa      => Client_T,
     required => 1,
-    handles  => [qw/is_alive all_buckets server_info stats search setup_indexing/]
+    handles  => [qw/is_alive all_buckets server_info stats search index setup_indexing/]
 );
 
 sub BUILDARGS {
@@ -49,7 +49,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.1700
+version 0.1701
 
 =head1 SYNOPSIS
 
@@ -80,6 +80,23 @@ version 0.1700
         index => 'bucket_name',
         q     => 'field:value'
     );
+
+    # Secondary index setup (REST interface)
+    my $obj3 = $bucket->new_object('foo3', {...});
+    $obj3->add_index('myindex_bin','myvalue' );
+    $obj3->add_index('number_int', 1001);
+    $obj3->store;
+
+    # Get all keys for a specific index/value pair
+    my @keys = $client->index('mybucket', 'myindex_bin', 'myvalue' );
+
+    # Get all keys for a range of index value pairs
+    my @keys = $client->index('mybucket', 'number_int', 500, 1500);
+
+    # Removing a secondary index (REST interface)
+    my $new_obj = $bucket->get('foo3');
+    $new_obj->remove_index('number_int', 1001);
+    $new_obj->store;
 
 =head1 DESCRIPTION
 
@@ -221,7 +238,7 @@ franck cuny <franck@lumberjaph.net>, robin edwards <robin.ge@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by linkfluence.
+This software is copyright (c) 2013 by linkfluence.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
