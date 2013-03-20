@@ -1,6 +1,6 @@
 package Net::Riak;
 {
-  $Net::Riak::VERSION = '0.1701';
+  $Net::Riak::VERSION = '0.1702';
 }
 
 # ABSTRACT: Interface to Riak
@@ -49,7 +49,7 @@ Net::Riak - Interface to Riak
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 SYNOPSIS
 

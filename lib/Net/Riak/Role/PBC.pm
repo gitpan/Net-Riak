@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC;
 {
-  $Net::Riak::Role::PBC::VERSION = '0.1701';
+  $Net::Riak::Role::PBC::VERSION = '0.1702';
 }
 
 use Moose::Role;
@@ -11,6 +11,7 @@ with qw(
   Net::Riak::Role::PBC::Bucket
   Net::Riak::Role::PBC::MapReduce
   Net::Riak::Role::PBC::Link
+  Net::Riak::Role::PBC::Meta
   Net::Riak::Role::PBC::Object);
 
 use Net::Riak::Types 'Socket';
@@ -84,7 +85,7 @@ sub server_info {
 
 sub stats { die "->stats is only avaliable through the REST interface" }
 
-1; 
+1;
 
 __END__
 
@@ -96,7 +97,7 @@ Net::Riak::Role::PBC
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

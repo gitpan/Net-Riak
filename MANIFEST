@@ -25,6 +25,7 @@ lib/Net/Riak/Role/PBC/Bucket.pm
 lib/Net/Riak/Role/PBC/Link.pm
 lib/Net/Riak/Role/PBC/MapReduce.pm
 lib/Net/Riak/Role/PBC/Message.pm
+lib/Net/Riak/Role/PBC/Meta.pm
 lib/Net/Riak/Role/PBC/Object.pm
 lib/Net/Riak/Role/REST.pm
 lib/Net/Riak/Role/REST/Bucket.pm
@@ -55,12 +56,14 @@ t/10_list_buckets.t
 t/11_get_keys.t
 t/20_search.t
 t/25-2index.t
+t/26-metadata.t
 t/90_bug_links.t
 t/client.t
 t/hosts.t
 t/lib/Test/Riak.pm
 t/pbc.t
 t/pbc/server_info.t
+t/release-eol.t
 t/release-no-tabs.t
 t/release-pod-coverage.t
 t/release-pod-syntax.t

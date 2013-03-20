@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Bucket;
 {
-  $Net::Riak::Role::REST::Bucket::VERSION = '0.1701';
+  $Net::Riak::Role::REST::Bucket::VERSION = '0.1702';
 }
 
 use Moose::Role;
@@ -85,7 +85,7 @@ Net::Riak::Role::REST::Bucket
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

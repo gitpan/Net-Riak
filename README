@@ -2,7 +2,7 @@ NAME
     Net::Riak - Interface to Riak
 
 VERSION
-    version 0.1701
+    version 0.1702
 
 SYNOPSIS
         # REST interface

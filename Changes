@@ -1,3 +1,5 @@
+0.1702 Wed 20 Mar 2013 12:03:47 GMT
+    - Add support for object meta data (Adam Lounds)
 0.1701 Fri  1 Mar 2013 13:03:44 GMT
     - Add support for secondary indexes (Theo bot)
     - Remove deprecations for 0.17 release (Robin Edwards)

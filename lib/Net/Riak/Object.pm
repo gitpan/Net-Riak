@@ -1,6 +1,6 @@
 package Net::Riak::Object;
 {
-  $Net::Riak::Object::VERSION = '0.1701';
+  $Net::Riak::Object::VERSION = '0.1702';
 }
 
 # ABSTRACT: holds meta information about a Riak object
@@ -43,6 +43,24 @@ has links => (
     },
     clearer => '_clear_links',
 );
+
+has metadata => (
+    traits     => ['Hash'],
+    is         => 'rw',
+    isa        => 'HashRef[Str]',
+    auto_deref => 1,
+    lazy       => 1,
+    default    => sub { {} },
+    handles    => {
+        set_meta    => 'set',
+        get_meta    => 'get',
+        remove_meta => 'delete',
+        has_meta    => 'count',
+        all_meta => 'elements',
+    },
+    clearer => '_clear_meta',
+);
+
 has siblings => (
     traits     => ['Array'],
     is         => 'rw',
@@ -129,6 +147,7 @@ sub clear {
     my $self = shift;
     $self->_clear_data;
     $self->_clear_links;
+    $self->_clear_meta;
     $self->exists(0);
     $self;
 }
@@ -220,7 +239,7 @@ Net::Riak::Object - holds meta information about a Riak object
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 SYNOPSIS
 
@@ -299,6 +318,38 @@ Add a new sibling
 =item get_sibling
 
 Return a sibling
+
+=item all_meta
+
+Returns a hash containing all the meta name/value pairs
+
+    my %metadata = $obj->all_meta;
+
+=item has_meta
+
+Returns the number of usermetas associated with the object. Typical use is as a
+predicate method.
+
+    if ( $obj->has_meta ) { ... }
+
+=item set_meta
+
+Sets a usermeta on the object, overriding any existing value for that key
+
+    $obj->set_meta( key => $value );
+
+=item get_meta
+
+Reads a single usermeta from the object. If multiple usermeta headers have been
+set for a single key (eg via another client), the values will be separated with
+a comma; Riak will concatenate the input headers and only return a single one.
+
+=item remove_meta
+
+removes a single usermeta from the object. Returns false on failure, eg if the
+key did not exist on the object.
+
+ $obj->remove_meta( 'key' ) || die( "could not remove" );
 
 =item store
 

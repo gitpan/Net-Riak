@@ -1,6 +1,6 @@
 package Net::Riak::Role::PBC::Link;
 {
-  $Net::Riak::Role::PBC::Link::VERSION = '0.1701';
+  $Net::Riak::Role::PBC::Link::VERSION = '0.1702';
 }
 use Moose::Role;
 use Net::Riak::Link;
@@ -26,12 +26,12 @@ sub _links_for_message {
     my ($self, $object) = @_;
 
     return [
-        map { { 
-                tag => $_->tag, 
-                key => $_->key, 
-                bucket => $_->bucket->name  
-            } 
-        } $object->all_links 
+        map { {
+                tag => $_->tag,
+                key => $_->key,
+                bucket => $_->bucket->name
+            }
+        } $object->all_links
     ]
 }
 
@@ -47,7 +47,7 @@ Net::Riak::Role::PBC::Link
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

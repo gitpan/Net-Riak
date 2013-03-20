@@ -1,11 +1,10 @@
 package Net::Riak::Role::PBC::MapReduce;
 {
-  $Net::Riak::Role::PBC::MapReduce::VERSION = '0.1701';
+  $Net::Riak::Role::PBC::MapReduce::VERSION = '0.1702';
 }
 use Moose::Role;
 use JSON;
 use List::Util 'sum';
-use Data::Dump 'pp';
 
 sub execute_job {
     my ($self, $job, $timeout, $returned_phases) = @_;
@@ -19,8 +18,8 @@ sub execute_job {
     my $resp = $self->send_message( MapRedReq => {
             request => $job_request,
             content_type => 'application/json'
-        }, sub { push @$results, $self->decode_phase(shift) }) 
-        or 
+        }, sub { push @$results, $self->decode_phase(shift) })
+        or
     die "MapReduce query failed!";
 
 
@@ -49,7 +48,7 @@ Net::Riak::Role::PBC::MapReduce
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

@@ -1,10 +1,8 @@
 package Net::Riak::Role::PBC::Bucket;
 {
-  $Net::Riak::Role::PBC::Bucket::VERSION = '0.1701';
+  $Net::Riak::Role::PBC::Bucket::VERSION = '0.1702';
 }
-
 use Moose::Role;
-use Data::Dumper;
 
 sub get_properties {
     my ( $self, $name, $params ) = @_;
@@ -32,7 +30,7 @@ sub get_keys {
             if ( defined $_[0]->keys ) {
                 if ($params->{cb}) {
                     $params->{cb}->($_) for @{ $_[0]->keys };
-                } 
+                }
                 else {
                     push @$keys, @{ $_[0]->keys };
                 }
@@ -40,10 +38,8 @@ sub get_keys {
         }
     );
 
-    return $params->{cb} ? undef : $keys; 
+    return $params->{cb} ? undef : $keys;
 }
-
-
 
 1;
 
@@ -57,7 +53,7 @@ Net::Riak::Role::PBC::Bucket
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

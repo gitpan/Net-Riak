@@ -22,7 +22,7 @@ sub test_riak (&) {
 
 sub test_riak_rest (&) {
     my ($test_case) = @_;
-    
+
     if ($ENV{RIAK_REST_HOST}) {
         diag "Running for REST";
         my $client = Net::Riak->new(host => $ENV{RIAK_REST_HOST}, r => 1, w => 1, dw => 1);
@@ -37,7 +37,7 @@ sub test_riak_rest (&) {
 
 sub test_riak_pbc (&) {
     my ($test_case) = @_;
-    
+
     if ($ENV{RIAK_PBC_HOST}) {
 
         diag "Running for PBC";
@@ -55,7 +55,7 @@ sub test_riak_pbc (&) {
         isa_ok $client, 'Net::Riak';
         is $client->is_alive, 1, 'connected';
         run_test_case($test_case, $client, 'PBC');
-    } 
+    }
     else {
         diag "Skipping PBC tests - RIAK_PBC_HOST not set";
     }

@@ -16,5 +16,5 @@ test_riak {
     ok $obj->exists, " exists after delete";
     $obj->load;
     ok !$obj->exists, "object don't exists after load";
-    is scalar(@{$bucket->get_keys}), 0, "no keys left in bucket"; 
+    is scalar(@{$bucket->get_keys}), 0, "no keys left in bucket";
 };

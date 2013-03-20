@@ -1,6 +1,6 @@
 package Net::Riak::Types;
 {
-  $Net::Riak::Types::VERSION = '0.1701';
+  $Net::Riak::Types::VERSION = '0.1702';
 }
 
 use MooseX::Types::Moose qw/Str ArrayRef HashRef/;
@@ -31,7 +31,7 @@ Net::Riak::Types
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

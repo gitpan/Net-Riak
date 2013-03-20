@@ -1,6 +1,6 @@
 package Net::Riak::Transport::PBC::Message;
 {
-  $Net::Riak::Transport::PBC::Message::VERSION = '0.1701';
+  $Net::Riak::Transport::PBC::Message::VERSION = '0.1702';
 }
 
 use Moose;
@@ -138,7 +138,7 @@ Net::Riak::Transport::PBC::Message
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 

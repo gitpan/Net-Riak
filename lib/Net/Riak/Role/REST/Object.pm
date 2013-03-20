@@ -1,6 +1,6 @@
 package Net::Riak::Role::REST::Object;
 {
-  $Net::Riak::Role::REST::Object::VERSION = '0.1701';
+  $Net::Riak::Role::REST::Object::VERSION = '0.1702';
 }
 
 use Moose::Role;
@@ -33,6 +33,12 @@ sub store_object {
 
     if ($object->has_links) {
         $request->header('link' => $self->_links_to_header($object));
+    }
+
+    if ($object->has_meta) {
+        while ( my ( $k, $v ) = each %{ $object->metadata } ) {
+            $request->header('x-riak-meta-' . lc($k) => $v );
+        }
     }
 
     if ($object->i2indexes) {
@@ -104,8 +110,13 @@ sub populate_object {
 
     $HTTP::Headers::TRANSLATE_UNDERSCORE = 0;
     foreach ($http_response->header_field_names) {
-        next unless /^X-Riak-Index-(.+_bin)$/ || /^X-Riak-Index-(.+_int)$/;
-        $obj->add_index(lc($1),  $http_response->header($_))
+
+        if ( /^X-Riak-Index-(.+_bin)$/ || /^X-Riak-Index-(.+_int)$/ ) {
+            $obj->add_index(lc($1),  $http_response->header($_))
+        }
+        elsif ( /^X-Riak-Meta-(.+)$/ ) {
+            $obj->set_meta(lc($1), $http_response->header($_));
+        }
     }
     $HTTP::Headers::TRANSLATE_UNDERSCORE = 1;
 
@@ -180,7 +191,7 @@ Net::Riak::Role::REST::Object
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =over 3
 

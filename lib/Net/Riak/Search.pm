@@ -1,5 +1,7 @@
-package
-Net::Riak::Search;
+package Net::Riak::Search;
+{
+  $Net::Riak::Search::VERSION = '0.1702';
+}
 use Moose;
 
 #ABSTRACT: Search interface
@@ -29,7 +31,7 @@ Net::Riak::Search - Search interface
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 SYNOPSIS
 
@@ -49,7 +51,7 @@ version 0.1701
     my $obj3 = $bucket->new_object('foo3', {...});
     $obj3->add_index('index', 'first');
     $obj3->store;
-    
+
     my @keys = $client->index('bucket', 'myindex_bin', 'first_value' [, 'last_value'] );
 
 =head1 DESCRIPTION

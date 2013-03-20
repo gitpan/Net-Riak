@@ -1,14 +1,9 @@
 package Net::Riak::Transport::PBC;
 {
-  $Net::Riak::Transport::PBC::VERSION = '0.1701';
+  $Net::Riak::Transport::PBC::VERSION = '0.1702';
 }
-
 use Moose::Role;
-
-with qw/
-  Net::Riak::Role::PBC
-  /;
-
+with qw/Net::Riak::Role::PBC/;
 1;
 
 __END__
@@ -21,7 +16,7 @@ Net::Riak::Transport::PBC
 
 =head1 VERSION
 
-version 0.1701
+version 0.1702
 
 =head1 AUTHOR
 
